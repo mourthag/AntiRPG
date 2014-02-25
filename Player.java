@@ -16,4 +16,6 @@ public class Player extends Mob
     {
         // Add your action code here.
     }    
+    
+    public boolean solid = true;
 }

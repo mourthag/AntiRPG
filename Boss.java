@@ -15,5 +15,7 @@ public class Boss extends NPC
     public void act() 
     {
         // Add your action code here.
-    }    
+    }  
+    
+    public boolean solid = true;
 }
