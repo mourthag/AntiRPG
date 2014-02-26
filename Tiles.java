@@ -26,9 +26,16 @@ public class Tiles extends Actor
             image = stImage;
         }
     }
+
+    public boolean inSight = false;
+    
+    public void setInSight(boolean status)
+    {
+        inSight = status;
+    }
     
     public void act() 
     {
-        //Redfined in the subclasses
+        
     }    
 }

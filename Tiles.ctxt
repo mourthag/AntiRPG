@@ -2,6 +2,8 @@
 comment0.params=visible\ stImage
 comment0.target=void\ sightRange(boolean,\ greenfoot.GreenfootImage)
 comment0.text=\r\n\ sightRange\ must\ be\ called\ every\ act()\ of\ the\ subclass\r\n\ It\ makes\ the\ image\ Black\ if\ its\ not\ in\ the\ range\ of\ the\ Player\r\n
-comment1.params=
-comment1.target=void\ act()
-numComments=2
+comment1.params=status
+comment1.target=void\ setInSight(boolean)
+comment2.params=
+comment2.target=void\ act()
+numComments=3

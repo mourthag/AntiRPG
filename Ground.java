@@ -14,8 +14,10 @@ public class Ground extends Tiles
      */
     public void act() 
     {
-        // Add your action code here.
+        sightRange(inSight, stImage);
     } 
-    
+
+    private GreenfootImage stImage = new GreenfootImage("granite-light.jpg");
+
     public boolean solid = false;
 }
