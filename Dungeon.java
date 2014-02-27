@@ -16,12 +16,19 @@ public class Dungeon extends World
      * 
      */
     public int difficulty = 26;
-    
+
+    public static final Class<?>[] PAINT_ORDER = {
+            Wall.class, 
+            Ground.class, 
+            Monster.class, 
+            Boss.class,
+            Player.class};
+
     public Dungeon()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1131, 725, 1);
-        
+
         //color the background black
         GreenfootImage background = getBackground();
         background.setColor(Color.BLACK);

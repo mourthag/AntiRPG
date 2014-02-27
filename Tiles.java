@@ -22,8 +22,7 @@ public class Tiles extends Actor
             image.fill();
         }
         else{
-            GreenfootImage image = getImage();
-            image = stImage;
+            setImage(stImage);
         }
     }
 

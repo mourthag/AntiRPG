@@ -14,10 +14,11 @@ public class Monster extends NPC
      */
     public void act() 
     {
+        stImage = new GreenfootImage("baby1.png");
         sightRange(inSight, stImage);
     }
 
-    private GreenfootImage stImage = new GreenfootImage("baby1.png");
+    private GreenfootImage stImage;
 
     public boolean solid = true;
 

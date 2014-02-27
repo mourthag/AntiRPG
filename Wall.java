@@ -14,10 +14,11 @@ public class Wall extends Tiles
      */
     public void act() 
     {
+        stImage = new GreenfootImage("brick.jpg");
         sightRange(inSight, stImage);
     }   
 
-    public GreenfootImage stImage = new GreenfootImage("brick.jpg");
+    public GreenfootImage stImage;
 
     public boolean solid = true;
 }

@@ -14,10 +14,11 @@ public class Ground extends Tiles
      */
     public void act() 
     {
+        stImage = new GreenfootImage("granite-light.jpg");
         sightRange(inSight, stImage);
     } 
 
-    private GreenfootImage stImage = new GreenfootImage("granite-light.jpg");
+    private GreenfootImage stImage;
 
     public boolean solid = false;
 }
