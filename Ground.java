@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Ground extends Actor
+public class Ground extends Tiles
 {
     /**
      * Act - do whatever the Ground wants to do. This method is called whenever
@@ -14,6 +14,11 @@ public class Ground extends Actor
      */
     public void act() 
     {
-        // Add your action code here.
-    }    
+        stImage = new GreenfootImage("granite-light.jpg");
+        sightRange(inSight, stImage);
+    } 
+
+    private GreenfootImage stImage;
+
+    public boolean solid = false;
 }

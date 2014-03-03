@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.*;
 
 /**
  * Write a description of class Player here.
@@ -14,6 +15,31 @@ public class Player extends Mob
      */
     public void act() 
     {
-        // Add your action code here.
+        if(Greenfoot.isKeyDown("right"))
+        {
+            move(1);
+        }
+        if(Greenfoot.isKeyDown("left"))
+        {
+            move(-1);
+        }
+        sight();
     }    
+
+    public boolean solid = true;
+
+    private void sight()
+    {
+        List<Tiles> allObjects = getWorld().getObjects(Tiles.class);
+        for(Tiles object_:allObjects)
+        {
+            object_.setInSight(false);
+        }
+
+        List<Tiles> inRange = getObjectsInRange(100, Tiles.class);
+        for(Tiles object_:inRange)
+        {
+            object_.setInSight(true);
+        }
+    }
 }

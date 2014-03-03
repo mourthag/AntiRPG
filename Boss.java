@@ -14,6 +14,10 @@ public class Boss extends NPC
      */
     public void act() 
     {
-        // Add your action code here.
-    }    
+        stImage = new GreenfootImage("baby2.png");
+        sightRange(inSight, stImage);
+    }  
+    private GreenfootImage stImage;
+    
+    public boolean solid = true;
 }
