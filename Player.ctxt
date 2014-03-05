@@ -1,9 +1,11 @@
 #BlueJ class context
 comment0.params=
-comment0.target=void\ act()
-comment0.text=\r\n\ Act\ -\ do\ whatever\ the\ Player\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
+comment0.target=Player()
 comment1.params=
-comment1.target=void\ sight()
-comment2.params=world
-comment2.target=void\ addedToWorld(greenfoot.World)
-numComments=3
+comment1.target=void\ adjustVisibility()
+comment2.params=
+comment2.target=void\ movement()
+comment3.params=
+comment3.target=void\ subSpecific()
+comment3.text=\n\ Do\ stuff\ only\ players\ but\ not\ tiles\ do\n
+numComments=4

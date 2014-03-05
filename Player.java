@@ -1,5 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-import java.util.*;
+import java.util.List;
 
 /**
  * Write a description of class Player here.
@@ -7,49 +7,47 @@ import java.util.*;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Player extends Mob
+public class Player extends Tile
 {
+    int viewingRange;
+    public Player(){
+        viewingRange = 300;
+        speed=1;
+        tileImageVisible = new GreenfootImage("player.png"); // choose image
+        tileImageVisibleDefault = true; //players are visible by default
+    }
+
+    //make stuff visible which should be visible
+    private void adjustVisibility()
+    {
+        List<Tile> tilesVisible = getObjectsInRange(viewingRange, Tile.class);
+        for(Tile tile : tilesVisible)
+        {
+            tile.setVisibility(true);
+        }
+    }
+
+    private void movement()
+    {
+        //move, and pay attention not to be faster diagonally
+        int x=0;
+        int y=0;
+        float factor=1;
+        if(Greenfoot.isKeyDown("right")) x++;
+        if(Greenfoot.isKeyDown("left")) x--;
+        if(Greenfoot.isKeyDown("down")) y++;
+        if(Greenfoot.isKeyDown("up")) y--;
+        if(x != 0 && y != 0) factor=(float)0.7071; // factor = squareRoot(0.5)
+        move(x*speed*factor, y*speed*factor);
+    }
+
     /**
-     * Act - do whatever the Player wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Do stuff only players but not tiles do
      */
-    public void act() 
-    {
-        if(Greenfoot.isKeyDown("right"))
-        {
-            move(1);
-        }
-        if(Greenfoot.isKeyDown("left"))
-        {
-            move(-1);
-        }
-        sight();
-    }    
-
-    public boolean solid = true;
-
-    private void sight()
-    {
-        List<Tiles> allObjects = getWorld().getObjects(Tiles.class);
-        for(Tiles object_:allObjects)
-        {
-            object_.setInSight(false);
-        }
-
-        List<Tiles> inRange = getObjectsInRange(100, Tiles.class);
-        for(Tiles object_:inRange)
-        {
-            object_.setInSight(true);
-        }
-    }
-
     @Override
-    protected void addedToWorld(World world)
+    public void subSpecific() 
     {
-        Dungeon curWorld = (Dungeon)getWorld();
-        GreenfootImage stImage = new GreenfootImage("person.png");
-        
-        stImage.scale(curWorld.getTileWidth(), curWorld.getTileHeight());	
-        setImage(stImage);
-    }
+        movement();
+        adjustVisibility();
+    }    
 }
