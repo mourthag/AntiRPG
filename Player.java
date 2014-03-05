@@ -42,4 +42,14 @@ public class Player extends Mob
             object_.setInSight(true);
         }
     }
+
+    @Override
+    protected void addedToWorld(World world)
+    {
+        Dungeon curWorld = (Dungeon)getWorld();
+        GreenfootImage stImage = new GreenfootImage("person.png");
+        
+        stImage.scale(curWorld.getTileWidth(), curWorld.getTileHeight());	
+        setImage(stImage);
+    }
 }

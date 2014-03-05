@@ -1,5 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
+import java.util.List
+;
 
 /**
  * The World is called Dungeon.
@@ -16,22 +18,37 @@ public class Dungeon extends World
      * 
      */
     public int difficulty = 26;
+    public static final int frameWidth = 1131;
+    public static final int frameHeight = 725;
 
     public static final Class<?>[] PAINT_ORDER = {
-            Wall.class, 
-            Ground.class, 
+            Player.class, 
+            Boss.class, 
             Monster.class, 
-            Boss.class,
-            Player.class};
+            Ground.class,
+            Wall.class};
 
     public Dungeon()
-    {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(1131, 725, 1);
+    {   
+        super(frameWidth, frameHeight, 1);
 
         //color the background black
         GreenfootImage background = getBackground();
         background.setColor(Color.BLACK);
         background.fill();
+
+        addObject(new Wall(), 45,45);
+        addObject(new Ground(), 70,45);
+        addObject(new Player(), 70, 70);
+    }
+
+    public int getTileHeight()
+    {
+        return frameHeight/34;
+    }
+
+    public int getTileWidth()
+    {
+        return frameWidth/51;
     }
 }
