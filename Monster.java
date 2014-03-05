@@ -18,8 +18,15 @@ public class Monster extends NPC
         sightRange(inSight, stImage);
     }
 
-    private GreenfootImage stImage;
+    private GreenfootImage stImage = new GreenfootImage("baby1.png");
 
     public boolean solid = true;
 
+    @Override
+    protected void addedToWorld(World world)
+    {
+        Dungeon curWorld = (Dungeon)getWorld();
+        stImage.scale(curWorld.getTileWidth(), curWorld.getTileHeight());	
+        setImage(stImage);
+    }
 }

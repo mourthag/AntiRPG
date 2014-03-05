@@ -4,4 +4,6 @@ comment0.target=void\ act()
 comment0.text=\r\n\ Act\ -\ do\ whatever\ the\ Player\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
 comment1.params=
 comment1.target=void\ sight()
-numComments=2
+comment2.params=world
+comment2.target=void\ addedToWorld(greenfoot.World)
+numComments=3

@@ -17,7 +17,15 @@ public class Boss extends NPC
         stImage = new GreenfootImage("baby2.png");
         sightRange(inSight, stImage);
     }  
-    private GreenfootImage stImage;
-    
+    private GreenfootImage stImage = new GreenfootImage("baby2.png");
+
     public boolean solid = true;
+
+    @Override
+    protected void addedToWorld(World world)
+    {
+        Dungeon curWorld = (Dungeon)getWorld();
+        stImage.scale(curWorld.getTileWidth(), curWorld.getTileHeight());	
+        setImage(stImage);
+    }
 }

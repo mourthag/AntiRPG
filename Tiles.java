@@ -9,11 +9,15 @@ import java.awt.Color;
  */
 public class Tiles extends Actor
 {
+    public boolean inSight = false;
+    
+    public boolean solid;
+
     /**
      * sightRange must be called every act() of the subclass
      * It makes the image Black if its not in the range of the Player
-    */
-     public void sightRange(boolean visible, GreenfootImage stImage)
+     */
+    public void sightRange(boolean visible, GreenfootImage stImage)
     {
         if(!visible)
         {
@@ -26,13 +30,11 @@ public class Tiles extends Actor
         }
     }
 
-    public boolean inSight = false;
-    
     public void setInSight(boolean status)
     {
         inSight = status;
     }
-    
+
     public void act() 
     {
         
