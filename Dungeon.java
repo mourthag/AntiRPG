@@ -16,8 +16,8 @@ public class Dungeon extends World
     public int difficulty = 26;
     public static final int frameWidth = 1131;
     public static final int frameHeight = 725;
-    public static final int tileCountX = 51;
-    public static final int tileCountY = 34;
+    public static final int tileCountX = 51; // frameWidth % tileCountX should be 0, and frameWidth/tileCountX=frameHeight/tileCountY
+    public static final int tileCountY = 34; // frameHight % tileCountY should be 0
     public static final int tileWidth = frameWidth/tileCountX;
     public static final int tileHeight = frameHeight/tileCountY;
 
