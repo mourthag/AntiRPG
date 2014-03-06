@@ -55,6 +55,7 @@ public class Tile extends Actor
     }
 
     // kind of like smoothMover, but without the unnecessary features
+    //todo: collisions
     public void move(float x, float y)
     {
         Xaccurate = Xaccurate + x;
@@ -70,7 +71,6 @@ public class Tile extends Actor
     public void act() 
     {
         // go to default state each act (before player act)
-        // should only override this for the player
         setVisibility(tileImageVisibleDefault);
         // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
         subSpecific();
