@@ -15,6 +15,7 @@ public class Player extends Tile
         speed=1;
         tileImageVisible = new GreenfootImage("player.png"); // choose image
         tileImageVisibleDefault = true; //players are visible by default
+        tileHeightmap[1] = true; //the player is situated at height 1 and is solid
     }
 
     //make stuff visible which should be visible

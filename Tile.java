@@ -1,6 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
 import java.lang.*;
+import java.util.List;
 
 /**
  * "Tiles" is the overall class which is included to manage 
@@ -16,12 +17,20 @@ public class Tile extends Actor
     float Xaccurate;
     float Yaccurate;
     float speed; //speed in pixels/act, automatically initialized to 0
+    boolean[] tileHeightmap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
+    int tileHeight; //height
 
     public Tile()
     {
         tileImageVisible = new GreenfootImage("none.png");
         tileImageInvisible = new GreenfootImage("obfuscated.png");
-        tileImageVisibleDefault = false; 
+        tileImageVisibleDefault = false;
+        tileHeight = 2;
+        tileHeightmap = new boolean[tileHeight]; 
+        for(int h=0; h<tileHeight; h++) //default tile isn't solid at all
+        {
+            tileHeightmap[h]=false;
+        }
     }
 
     //run when placing the object in the world
@@ -54,13 +63,40 @@ public class Tile extends Actor
         }
     }
 
+    public void updatePreciseLocation(float x, float y)
+    {
+        setLocation(Math.round(x), Math.round(y));
+    }
+
     // kind of like smoothMover, but without the unnecessary features
     //todo: collisions
     public void move(float x, float y)
     {
-        Xaccurate = Xaccurate + x;
-        Yaccurate = Yaccurate + y;
-        setLocation(Math.round(Xaccurate), Math.round(Yaccurate));
+        Xaccurate += x;
+        Yaccurate += y;
+        updatePreciseLocation(Xaccurate, Yaccurate);
+        if(colliding()) // just reverse the move before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
+        {
+            Xaccurate -= x;
+            Yaccurate -= y;
+            updatePreciseLocation(Xaccurate, Yaccurate);
+        }
+    }
+
+    public boolean colliding()
+    {
+        List<Tile> tilesVisible = getIntersectingObjects(Tile.class); //visually intersecting tiles
+        for(Tile otherTile : tilesVisible)
+        {
+            for(int i=0; i < tileHeight; i++)
+            {
+                if(otherTile.tileHeightmap[i] && tileHeightmap[i]) //logically intersecting?
+                {
+                    return(true);
+                }
+            }
+        }
+        return(false);
     }
 
     void subSpecific()
