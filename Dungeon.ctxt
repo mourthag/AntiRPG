@@ -1,5 +1,14 @@
 #BlueJ class context
 comment0.params=
 comment0.target=Dungeon()
-comment0.text=\n\ Constructor\ for\ objects\ of\ class\ Dungeon.\n\ \n
-numComments=1
+comment0.text=\r\n\ Constructor\ for\ objects\ of\ class\ Dungeon.\r\n\ \r\n
+comment1.params=x\ y\ width\ height
+comment1.target=void\ spawnRoom(int,\ int,\ int,\ int)
+comment1.text=\r\n\ spawns\ a\ rectangle\ room\ at\ postition\ x,y\ \r\n\ its\ size\ is\ declared\ in\ Tiles\r\n
+comment2.params=startX\ startY\ horizontal\ length
+comment2.target=void\ createWallLine(int,\ int,\ boolean,\ int)
+comment2.text=\r\n\ Creates\ a\ Line\ of\ Walls\r\n
+comment3.params=startX\ startY\ horizontal\ length
+comment3.target=void\ createFloorLine(int,\ int,\ boolean,\ int)
+comment3.text=\r\n\ Creates\ a\ Line\ of\ Floor\r\n
+numComments=4
