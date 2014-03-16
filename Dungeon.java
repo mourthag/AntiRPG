@@ -52,9 +52,16 @@ public class Dungeon extends World
      */
     public void spawnRoom(int x, int y, int width, int height)
     {
-        //coordinates for the opposite start
-        int opX = x + (width - 1) * tileWidth;
-        int opY = y + (height - 1) * tileHeight ;
+        //Pack the Boarder Coordinates
+        int[] outerCoordinates = new int[8];
+        outerCoordinates[0] = x;                                    //Top Left
+        outerCoordinates[1] = y;
+        outerCoordinates[2] = x + (width - 1) * tileWidth;          //Top Right
+        outerCoordinates[3] = y;
+        outerCoordinates[4] = x + (width - 1) * tileWidth;          //Bottom Right
+        outerCoordinates[5] = y + (height - 1) * tileHeight;
+        outerCoordinates[6] = x;                                    //Bottom Left
+        outerCoordinates[7] = y + (height - 1) * tileHeight;
 
         //inner coordinates for the floor
         int innerWidth = width - 2;
@@ -63,16 +70,20 @@ public class Dungeon extends World
         int innerY = y + tileHeight;
 
         //outer Boarders
-        createWallLine( x, y, true, width);                             //top
-        createWallLine( x, y + tileHeight, false, height - 1);          //left
-        createWallLine( innerX, opY, true, width - 1);                  //bottom
-        createWallLine( opX, innerY, false, height - 2);                 //right
+        //TODO: use outerCoordinates[]
+        createWallLine( x, y, true, width);                                             //top
+        createWallLine( x, y + tileHeight, false, height - 1);                          //left
+        createWallLine( innerX, outerCoordinates[7], true, width - 1);                  //bottom
+        createWallLine( outerCoordinates[4], innerY, false, height - 2);                //right
 
         //Fill with Floor
-        for(int k = 0; k<innerHeight; k++)
+        for(int i = 0; i<innerHeight; i++)
         {
-            createFloorLine(innerX , innerY + k*tileHeight, true, innerWidth);
+            createFloorLine(innerX , innerY + i*tileHeight, true, innerWidth);
         }
+
+        int doorCount = Greenfoot.getRandomNumber(4);   //number of Doors
+        setDoors(doorCount, outerCoordinates, width, height);                            //Delete Walls and replace them with Doors
     }
 
     /*
@@ -114,6 +125,49 @@ public class Dungeon extends World
             {
                 addObject(new Floor(), startX, startY + j*tileHeight);
             }
+        }
+    }
+
+    public void setDoors(int doorCount, int[] roomCoordinates, int width, int height)
+    {
+        int[] doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
+        int[] doorDirections = new int[doorCount];     //int array for the direction of each door             
+        //0 = top   1 = right   2 = bottom  3 = left
+        
+        int innerX = roomCoordinates[0] + tileWidth;
+        int innerY = roomCoordinates[1] + tileHeight;
+
+        for(int i = 0; i<doorCount; i++)
+        {
+            doorDirections[i] = Greenfoot.getRandomNumber(4);
+            //TODO: Make these doors not intersecting with others
+
+            if(doorDirections[i] == 0)
+            {
+                doorCoordinates[i] = innerX + Greenfoot.getRandomNumber(width - 2) * tileWidth;
+                doorCoordinates[i + 1] = roomCoordinates[1];
+            }
+            else if(doorDirections[i] == 1)
+            {
+                doorCoordinates[i] = roomCoordinates[4];
+                doorCoordinates[i + 1] = innerY + Greenfoot.getRandomNumber(height - 2) * tileHeight;
+
+            }
+            else if(doorDirections[i] == 2)
+            {
+                doorCoordinates[i] = innerX + Greenfoot.getRandomNumber(width - 2) * tileWidth;
+                doorCoordinates[i + 1] = roomCoordinates[7];
+            }
+            else if(doorDirections[i] == 3)
+            {
+                doorCoordinates[i] = roomCoordinates[0];
+                doorCoordinates[i + 1] = innerY + Greenfoot.getRandomNumber(height - 2) * tileHeight;
+            }
+
+            List<Wall> wallsToRemove = getObjectsAt(doorCoordinates[i], doorCoordinates[i + 1], Wall.class);
+            removeObjects(wallsToRemove);
+            addObject(new Door(), doorCoordinates[i], doorCoordinates[i + 1]);
+
         }
     }
 }

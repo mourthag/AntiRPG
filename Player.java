@@ -11,7 +11,7 @@ public class Player extends Tile
 {
     int viewingRange;
     public Player(){
-        viewingRange = 300;
+        viewingRange = 300;  //TODO: make the Range dependet to the size of the tiles
         speed=1;
         tileImageVisible = new GreenfootImage("player.png"); // choose image
         tileImageVisibleDefault = true; //players are visible by default

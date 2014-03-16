@@ -11,4 +11,6 @@ comment2.text=\r\n\ Creates\ a\ Line\ of\ Walls\r\n
 comment3.params=startX\ startY\ horizontal\ length
 comment3.target=void\ createFloorLine(int,\ int,\ boolean,\ int)
 comment3.text=\r\n\ Creates\ a\ Line\ of\ Floor\r\n
-numComments=4
+comment4.params=doorCount\ roomCoordinates\ width\ height
+comment4.target=void\ setDoors(int,\ int[],\ int,\ int)
+numComments=5
