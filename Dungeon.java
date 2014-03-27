@@ -2,7 +2,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import java.util.List;
-;
+import java.util.ArrayList;
 
 /**
  * The World is called Dungeon.
@@ -20,6 +20,8 @@ public class Dungeon extends World
     public static final int tileCountY = 34; // frameHight % tileCountY should be 0
     public static final int tileWidth = frameWidth/tileCountX;
     public static final int tileHeight = frameHeight/tileCountY;
+    
+    public List<int[]> allRooms = new ArrayList<int[]>();    //List of all coordinates of every room
 
     /**
      * Constructor for objects of class Dungeon.
@@ -50,7 +52,7 @@ public class Dungeon extends World
      * spawns a rectangle room at postition x,y 
      * its size is declared in Tiles
      */
-    public void spawnRoom(int x, int y, int width, int height)
+    public void spawnRoom(int x, int y, int width, int height, int...entrance)
     {
         //Pack the Boarder Coordinates
         int[] outerCoordinates = new int[8];
@@ -62,6 +64,14 @@ public class Dungeon extends World
         outerCoordinates[5] = y + (height - 1) * tileHeight;
         outerCoordinates[6] = x;                                    //Bottom Left
         outerCoordinates[7] = y + (height - 1) * tileHeight;
+
+        allRooms.add(outerCoordinates);
+        
+        //if a entrance is given create the door
+        if(entrance.length != 0)
+        {
+            addObject(new Door(), entrance[0], entrance[1]);
+        }
 
         //inner coordinates for the floor
         int innerWidth = width - 2;
@@ -82,8 +92,12 @@ public class Dungeon extends World
             createFloorLine(innerX , innerY + i*tileHeight, true, innerWidth);
         }
 
-        int doorCount = Greenfoot.getRandomNumber(4);   //number of Doors
-        setDoors(doorCount, outerCoordinates, width, height);                            //Delete Walls and replace them with Doors
+        boolean[] blockedWalls =  blockedWalls(outerCoordinates);
+
+        int doorCount = Greenfoot.getRandomNumber(4);   //number of Doors 
+        //TODO:different number of doors with different amount of blocked doors
+
+        setDoors(doorCount, outerCoordinates, width, height, blockedWalls);                            //Delete Walls and replace them with Doors
     }
 
     /*
@@ -128,46 +142,105 @@ public class Dungeon extends World
         }
     }
 
-    public void setDoors(int doorCount, int[] roomCoordinates, int width, int height)
+    public void setDoors(int doorCount, int[] roomCoordinates, int width, int height,boolean[] blockedWalls)
     {
         int[] doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
         int[] doorDirections = new int[doorCount];     //int array for the direction of each door             
         //0 = top   1 = right   2 = bottom  3 = left
-        
+
         int innerX = roomCoordinates[0] + tileWidth;
         int innerY = roomCoordinates[1] + tileHeight;
 
+        int[] nextRoom = new int[doorCount * 2];          //Coords for the rooms that will be spawned
+        int[] nextDoor = new int[doorCount * 2]; 
+
+        
         for(int i = 0; i<doorCount; i++)
         {
-            doorDirections[i] = Greenfoot.getRandomNumber(4);
+            int random = Greenfoot.getRandomNumber(4);
+            while(blockedWalls[random])
+            {
+                random = Greenfoot.getRandomNumber(4);
+            }
+
+            doorDirections[i] = random;
             //TODO: Make these doors not intersecting with others
+            //Maybe with: objectsInRange()
 
             if(doorDirections[i] == 0)
             {
+//                 while(doorCoordinates[i] - allRooms.s > 10)
                 doorCoordinates[i] = innerX + Greenfoot.getRandomNumber(width - 2) * tileWidth;
                 doorCoordinates[i + 1] = roomCoordinates[1];
+
+                nextRoom[i + 1] =  doorCoordinates[i + 1] + 1;  //TODO:Make this Distance Random(maybe relying on the difficulty)
+                nextDoor[i + 1] = nextRoom[i + 1];
+
             }
             else if(doorDirections[i] == 1)
             {
                 doorCoordinates[i] = roomCoordinates[4];
                 doorCoordinates[i + 1] = innerY + Greenfoot.getRandomNumber(height - 2) * tileHeight;
 
+                nextRoom[i] =  doorCoordinates[i] + 1;
+                nextDoor[i] = nextRoom[i];
+
             }
             else if(doorDirections[i] == 2)
             {
                 doorCoordinates[i] = innerX + Greenfoot.getRandomNumber(width - 2) * tileWidth;
                 doorCoordinates[i + 1] = roomCoordinates[7];
+
+                nextRoom[i + 1] =  doorCoordinates[i + 1] - 1;
+                nextDoor[i + 1] = nextRoom[i + 1];
+
             }
             else if(doorDirections[i] == 3)
             {
                 doorCoordinates[i] = roomCoordinates[0];
                 doorCoordinates[i + 1] = innerY + Greenfoot.getRandomNumber(height - 2) * tileHeight;
+
+                nextRoom[i] =  doorCoordinates[i] - 1;
+                nextDoor[i] = nextRoom[i];
+
             }
+
+            nextDoor[i] = doorCoordinates[i];
 
             List<Wall> wallsToRemove = getObjectsAt(doorCoordinates[i], doorCoordinates[i + 1], Wall.class);
             removeObjects(wallsToRemove);
             addObject(new Door(), doorCoordinates[i], doorCoordinates[i + 1]);
+        }
+
+    }
+
+    public boolean[] blockedWalls(int[] roomCoordinates)
+    {
+        boolean[] blocked = new boolean[4]; //4 int        0 = top   1 = right   2 = bottom  3 = left; true = blocked false = available
+
+        if(roomCoordinates[0] < 10 * tileWidth) //TODO: make this rely on the difficulty
+        {
+            blocked[0] = true;         //top
 
         }
+        if(roomCoordinates[1] < 10 * tileHeight)
+        {
+            blocked[3] = true;         //left
+
+        }
+        if(roomCoordinates[6] >  frameWidth - 10 * tileWidth)
+        {
+            blocked[1] = true;         //right
+
+        }
+        if(roomCoordinates[7] > frameHeight - 10 * tileHeight)
+        {
+            blocked[2] = true;         //bottom
+
+        }
+
+        return blocked;
     }
+    
+//     public boolean checkTooCloseRoom(int[] doorCoordinates, int direction)
 }
