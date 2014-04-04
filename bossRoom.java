@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class bossRoom extends Rooms
+public class bossRoom extends Room
 {
         public bossRoom(int x, int y, int width, int height)
     {

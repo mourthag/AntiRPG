@@ -7,47 +7,63 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Rooms extends Actor
+public class Room extends Actor
 {
     Dungeon currWorld = (Dungeon)getWorld();
     int tileWidth = currWorld.tileWidth;
     int tileHeight = currWorld.tileHeight;
     
-    public Rooms(int x, int y, int width, int height, int...entrance)
+    int curX;
+    int curY;
+    int curWidth;
+    int curHeight;
+    int[] curEntrance;
+    
+    public Room(int x, int y, int width, int height, int...entrance)
     {
-        currWorld = (Dungeon)getWorld();
+        curX = x;
+        curY = y;
+        curWidth = width;
+        curHeight = height;
+        curEntrance = entrance;
+    }
+    
+    @Override
+    protected void addedToWorld(World world)
+    {
+       currWorld = (Dungeon)getWorld();
         
         //Pack the Boarder Coordinates
         int[] outerCoordinates = new int[8];
-        outerCoordinates[0] = x;                                    //Top Left
-        outerCoordinates[1] = y;
-        outerCoordinates[2] = x + (width - 1) * tileWidth;          //Top Right
-        outerCoordinates[3] = y;
-        outerCoordinates[4] = x + (width - 1) * tileWidth;          //Bottom Right
-        outerCoordinates[5] = y + (height - 1) * tileHeight;
-        outerCoordinates[6] = x;                                    //Bottom Left
-        outerCoordinates[7] = y + (height - 1) * tileHeight;
+        outerCoordinates[0] = curX;                                    //Top Left
+        outerCoordinates[1] = curY;
+        outerCoordinates[2] = curX + (curWidth - 1) * tileWidth;          //Top Right
+        outerCoordinates[3] = curY;
+        outerCoordinates[4] = curX + (curWidth - 1) * tileWidth;          //Bottom Right
+        outerCoordinates[5] = curY + (curHeight - 1) * tileHeight;
+        outerCoordinates[6] = curX;                                    //Bottom Left
+        outerCoordinates[7] = curY + (curHeight - 1) * tileHeight;
 
         //currWorld.allRooms.add(outerCoordinates);
 
         //if a entrance is given create the door
-        if(entrance.length == 2)
+        if(curEntrance.length == 2)
         {
-            currWorld.addObject(new Door(), entrance[0], entrance[1]);
+            currWorld.addObject(new Door(), curEntrance[0], curEntrance[1]);
         }
 
         //inner coordinates for the floor
-        int innerWidth = width - 2;
-        int innerHeight = height - 2;
-        int innerX = x + tileWidth;
-        int innerY = y + tileHeight;
+        int innerWidth = curWidth - 2;
+        int innerHeight = curHeight - 2;
+        int innerX = curX + tileWidth;
+        int innerY = curY + tileHeight;
 
         //outer Boarders
         //TODO: use outerCoordinates[]
-        createWallLine( x, y, true, width);                                             //top
-        createWallLine( x, y + tileHeight, false, height - 1);                          //left
-        createWallLine( innerX, outerCoordinates[7], true, width - 1);                  //bottom
-        createWallLine( outerCoordinates[4], innerY, false, height - 2);                //right
+        createWallLine( curX, curY, true, curWidth);                                             //top
+        createWallLine( curX, curY + tileHeight, false, curHeight - 1);                          //left
+        createWallLine( innerX, outerCoordinates[7], true, curWidth - 1);                  //bottom
+        createWallLine( outerCoordinates[4], innerY, false, curHeight - 2);                //right
 
         //Fill with Floor
         for(int i = 0; i<innerHeight; i++)
