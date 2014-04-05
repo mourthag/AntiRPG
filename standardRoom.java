@@ -6,11 +6,11 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class standardRoom extends Rooms
+public class standardRoom extends Room
 {
-    public standardRoom(int x, int y, int width, int height)
+    public standardRoom(int x, int y, int width, int height, int[] entrance)
     {
-        super( x, y, width, height);
+        super( x, y, width, height, entrance);
     }
     /**
      * Act - do whatever the Room wants to do. This method is called whenever
