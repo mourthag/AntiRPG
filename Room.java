@@ -7,12 +7,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Room extends Actor
+public class Room extends hackedActor
 {
-    Dungeon currWorld = (Dungeon)getWorld();
-    int tileWidth = currWorld.tileWidth;
-    int tileHeight = currWorld.tileHeight;
-    
     int curX;
     int curY;
     int curWidth;
@@ -31,44 +27,42 @@ public class Room extends Actor
     @Override
     protected void addedToWorld(World world)
     {
-       currWorld = (Dungeon)getWorld();
-        
         //Pack the Boarder Coordinates
         int[] outerCoordinates = new int[8];
         outerCoordinates[0] = curX;                                    //Top Left
         outerCoordinates[1] = curY;
-        outerCoordinates[2] = curX + (curWidth - 1) * tileWidth;          //Top Right
+        outerCoordinates[2] = curX + (curWidth - 1) * getDungeon().tileWidth;          //Top Right
         outerCoordinates[3] = curY;
-        outerCoordinates[4] = curX + (curWidth - 1) * tileWidth;          //Bottom Right
-        outerCoordinates[5] = curY + (curHeight - 1) * tileHeight;
+        outerCoordinates[4] = curX + (curWidth - 1) * getDungeon().tileWidth;          //Bottom Right
+        outerCoordinates[5] = curY + (curHeight - 1) * getDungeon().tileHeight;
         outerCoordinates[6] = curX;                                    //Bottom Left
-        outerCoordinates[7] = curY + (curHeight - 1) * tileHeight;
+        outerCoordinates[7] = curY + (curHeight - 1) * getDungeon().tileHeight;
 
         //currWorld.allRooms.add(outerCoordinates);
 
         //if a entrance is given create the door
         if(curEntrance.length == 2)
         {
-            currWorld.addObject(new Door(), curEntrance[0], curEntrance[1]);
+            getDungeon().addObject(new Door(), curEntrance[0], curEntrance[1]);
         }
 
         //inner coordinates for the floor
         int innerWidth = curWidth - 2;
         int innerHeight = curHeight - 2;
-        int innerX = curX + tileWidth;
-        int innerY = curY + tileHeight;
+        int innerX = curX + getDungeon().tileWidth;
+        int innerY = curY + getDungeon().tileHeight;
 
         //outer Boarders
         //TODO: use outerCoordinates[]
         createWallLine( curX, curY, true, curWidth);                                             //top
-        createWallLine( curX, curY + tileHeight, false, curHeight - 1);                          //left
+        createWallLine( curX, curY + getDungeon().tileHeight, false, curHeight - 1);                          //left
         createWallLine( innerX, outerCoordinates[7], true, curWidth - 1);                  //bottom
         createWallLine( outerCoordinates[4], innerY, false, curHeight - 2);                //right
 
         //Fill with Floor
         for(int i = 0; i<innerHeight; i++)
         {
-            createFloorLine(innerX , innerY + i*tileHeight, true, innerWidth);
+            createFloorLine(innerX , innerY + i*getDungeon().tileHeight, true, innerWidth);
         }
     }
     
@@ -78,7 +72,7 @@ public class Room extends Actor
      */
     public void act() 
     {
-        currWorld = (Dungeon)getWorld();
+
     }   
 
     /*
@@ -90,14 +84,14 @@ public class Room extends Actor
         {
             for(int i=0; i<length; i++)
             {
-               currWorld.addObject(new Wall(), startX + i*tileWidth, startY);
+               getDungeon().addObject(new Wall(), startX + i*getDungeon().tileWidth, startY);
             }
         }
         else
         {
             for(int j=0; j<length; j++)
             {
-                currWorld.addObject(new Wall(), startX, startY + j*tileHeight);
+                getDungeon().addObject(new Wall(), startX, startY + j*getDungeon().tileHeight);
             }
         }
     }
@@ -111,14 +105,14 @@ public class Room extends Actor
         {
             for(int i=0; i<length; i++)
             {
-                currWorld.addObject(new Floor(), startX + i*tileWidth, startY);
+                getDungeon().addObject(new Floor(), startX + i*getDungeon().tileWidth, startY);
             }
         }
         else
         {
             for(int j=0; j<length; j++)
             {
-                currWorld.addObject(new Floor(), startX, startY + j*tileHeight);
+                getDungeon().addObject(new Floor(), startX, startY + j*getDungeon().tileHeight);
             }
         }
     }
