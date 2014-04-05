@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Dungeon()
+comment0.text=\r\n\ Constructor\ for\ objects\ of\ class\ Dungeon.\r\n\ \r\n
+comment1.params=x\ y\ width\ height
+comment1.target=void\ startUpRoom(int,\ int,\ int,\ int)
+comment1.text=\r\n\ spawns\ a\ rectangle\ room\ at\ postition\ x,y\ \r\n\ its\ size\ is\ declared\ in\ Tiles\r\n
+numComments=2
