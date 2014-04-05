@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Player()
+comment1.params=
+comment1.target=void\ adjustVisibility()
+comment2.params=
+comment2.target=void\ movement()
+comment3.params=
+comment3.target=void\ subSpecific()
+comment3.text=\n\ Do\ stuff\ only\ players\ but\ not\ tiles\ do\n
+numComments=4
