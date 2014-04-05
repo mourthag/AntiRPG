@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Room extends Actor
+public class Room extends hackedActor
 {
     Dungeon currWorld = (Dungeon)getWorld();
     int tileWidth = currWorld.tileWidth;

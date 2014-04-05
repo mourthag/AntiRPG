@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author mourthag, t4b
  */
-public class Tile extends Actor
+public class Tile extends hackedActor
 {
     GreenfootImage tileImageVisible;
     GreenfootImage tileImageInvisible;
