@@ -1,5 +1,0 @@
-#BlueJ class context
-comment0.params=
-comment0.target=Dungeon\ getDungeon()
-comment0.text=\n\ getWorld()\ method\ which\ actually\ returns\ the\ world\ instead\ of\ the\ world\ casted\ to\ the\ World\ class.\n
-numComments=1
