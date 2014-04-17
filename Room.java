@@ -9,16 +9,21 @@ import java.util.Arrays;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Room extends Actor
+public class Room extends hackedActor
 {
-    Dungeon currWorld = (Dungeon)getWorld();
-    int tileWidth = currWorld.tileWidth;
-    int tileHeight = currWorld.tileHeight;
-
+    int tileWidth = getDungeon().tileWidth;
+    int tileHeight = getDungeon().tileHeight;
     int doorCount = Greenfoot.getRandomNumber(4);   //Number of Doors
     boolean[] blockedWalls;                         //the blocked Walls of this room
     int[] outerCoordinates = new int[8];            //for easier handling
-    
+
+    int[] doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
+    int[] doorDirections = new int[doorCount];     //int array for the direction of each door             
+    //0 = top   1 = right   2 = bottom  3 = left
+
+    int[] nextRoom = new int[doorCount * 2];          //Coords for the rooms that will be spawned
+    int[] nextDoor = new int[doorCount * 2];          //Coords for the Entrance of these rooms
+
     //For handling them over to addedToWorld()
     int curX;           
     int curY;
@@ -31,7 +36,7 @@ public class Room extends Actor
     int innerHeight;
     int innerX;
     int innerY;
-    
+
     public Room(int x, int y, int width, int height, int...entrance)
     {
         curX = x;
@@ -44,8 +49,6 @@ public class Room extends Actor
     @Override
     protected void addedToWorld(World world)
     {
-        currWorld = (Dungeon)getWorld();
-
         //Pack the Boarder Coordinates
         outerCoordinates[0] = curX;                                    //Top Left
         outerCoordinates[1] = curY;
@@ -69,13 +72,12 @@ public class Room extends Actor
         createWallLine( innerX, outerCoordinates[7], true, curWidth - 1);                  //bottom
         createWallLine( outerCoordinates[4], innerY, false, curHeight - 2);                //right
 
-        
         //if a entrance is given create the door
         if(curEntrance.length == 2)
         {
-            currWorld.addObject(new Door(), curEntrance[0], curEntrance[1]);
+            getDungeon().addObject(new Door(), curEntrance[0], curEntrance[1]);
         }
-        
+
         //Fill with Floor
         for(int i = 0; i<innerHeight; i++)
         {
@@ -94,7 +96,7 @@ public class Room extends Actor
      */
     public void act() 
     {
-        currWorld = (Dungeon)getWorld();
+
     }   
 
     /*
@@ -106,14 +108,14 @@ public class Room extends Actor
         {
             for(int i=0; i<length; i++)
             {
-                currWorld.addObject(new Wall(), startX + i*tileWidth, startY);
+                getDungeon().addObject(new Wall(), startX + i*tileWidth, startY);
             }
         }
         else
         {
             for(int j=0; j<length; j++)
             {
-                currWorld.addObject(new Wall(), startX, startY + j*tileHeight);
+                getDungeon().addObject(new Wall(), startX, startY + j*tileHeight);
             }
         }
     }
@@ -127,14 +129,14 @@ public class Room extends Actor
         {
             for(int i=0; i<length; i++)
             {
-                currWorld.addObject(new Floor(), startX + i*tileWidth, startY);
+                getDungeon().addObject(new Floor(), startX + i*tileWidth, startY);
             }
         }
         else
         {
             for(int j=0; j<length; j++)
             {
-                currWorld.addObject(new Floor(), startX, startY + j*tileHeight);
+                getDungeon().addObject(new Floor(), startX, startY + j*tileHeight);
             }
         }
     }
@@ -144,13 +146,6 @@ public class Room extends Actor
      */
     public void setDoors()
     {
-        int[] doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
-        int[] doorDirections = new int[doorCount];     //int array for the direction of each door             
-        //0 = top   1 = right   2 = bottom  3 = left
-
-        int[] nextRoom = new int[doorCount * 2];          //Coords for the rooms that will be spawned
-        int[] nextDoor = new int[doorCount * 2];          //Coords for the Entrance of these rooms
-
         for(int i = 0; i<doorCount; i++)
         {
             boolean tooCloseDoor = false;
@@ -203,15 +198,19 @@ public class Room extends Actor
                 }
 
                 nextDoor[i] = doorCoordinates[i];
-                List<Wall> wallsToRemove = currWorld.getObjectsAt(doorCoordinates[i], doorCoordinates[i + 1], Wall.class);
-                currWorld.removeObjects(wallsToRemove);
-                currWorld.addObject(new Door(), doorCoordinates[i], doorCoordinates[i + 1]);
+                List<Wall> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[i], doorCoordinates[i + 1], Wall.class);
 
-                List<Door> thisDoor =  currWorld.getObjectsAt(doorCoordinates[i], doorCoordinates[i + 1], Door.class);
-
-                for(Door currDoor : thisDoor)
+                for(Wall currWall:wallsToRemove)
                 {
-                    tooCloseDoor = currDoor.doorInRange;
+                    if(currWall.doorsInRange())
+                    {
+                        tooCloseDoor = true;
+                    }
+                    else
+                    {
+                        getDungeon().removeObjects(wallsToRemove);
+                        getDungeon().addObject(new Door(), doorCoordinates[i], doorCoordinates[i + 1]);
+                    }
                 }
 
             }while(checkTooCloseRoom(Arrays.copyOfRange(doorCoordinates, i, i+2), doorDirections[i]) && tooCloseDoor);
@@ -236,12 +235,12 @@ public class Room extends Actor
             blocked[3] = true;         //left
 
         }
-        if(outerCoordinates[6] >  currWorld.frameWidth - 10 * tileWidth)
+        if(outerCoordinates[6] >  getDungeon().frameWidth - 10 * tileWidth)
         {
             blocked[1] = true;         //right
 
         }
-        if(outerCoordinates[7] > currWorld.frameHeight - 10 * tileHeight)
+        if(outerCoordinates[7] > getDungeon().frameHeight - 10 * tileHeight)
         {
             blocked[2] = true;         //bottom
 
@@ -255,14 +254,29 @@ public class Room extends Actor
      */
     public boolean checkTooCloseRoom(int[] doorCoordinates, int direction)
     {
-  
-        List<Room> otherRoomsInRange = getObjectsInRange(currWorld.roomDistance * tileHeight, Room.class);
+
+        List<Room> otherRoomsInRange = getObjectsInRange(getDungeon().roomDistance , Room.class);
         if(otherRoomsInRange.size() == 0)
         {
             return false;
         }
-        
+
         return true;
+    }
+
+    /*
+     * creates the new Rooms
+     */
+    public void randomRoom()
+    {
+        if(!getDungeon().bossRoomSpawned)
+        {
+            if(Greenfoot.getRandomNumber(100) = getDungeon().bossChance)
+            {
+                getDungeon.addObject(new bossRoom(nextRoom[number],nextRoom[number+1],),nextRoom[number],nextRoom[number+1])
+            }
+        }
+
     }
 }
 
