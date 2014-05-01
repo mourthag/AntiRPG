@@ -12,6 +12,7 @@ public class starterRoom extends Room
     public starterRoom(int x, int y, int width, int height)
     {
         super( x, y, width, height);
+        doorCount = 2;
     }
     
     /**

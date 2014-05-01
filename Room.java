@@ -21,7 +21,6 @@ public class Room extends hackedActor
     int[] doorDirections = new int[doorCount];     //int array for the direction of each door             
     //0 = top   1 = right   2 = bottom  3 = left
 
-    int[] nextRoom = new int[doorCount * 2];          //Coords for the rooms that will be spawned
     int[] nextDoor = new int[doorCount * 2];          //Coords for the Entrance of these rooms
 
     //For handling them over to addedToWorld()
@@ -75,6 +74,7 @@ public class Room extends hackedActor
         //if a entrance is given create the door
         if(curEntrance.length == 2)
         {
+            getDungeon().removeObjects(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Wall.class));
             getDungeon().addObject(new Door(), curEntrance[0], curEntrance[1]);
         }
 
@@ -162,44 +162,44 @@ public class Room extends hackedActor
             {
                 if(doorDirections[i] == 0)
                 {
-                    doorCoordinates[i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
-                    doorCoordinates[i + 1] = outerCoordinates[1];
+                    doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
+                    doorCoordinates[2*i + 1] = outerCoordinates[1];
 
-                    nextRoom[i + 1] =  doorCoordinates[i + 1] + 1;  //TODO:Make this Distance Random(maybe relying on the difficulty)
-                    nextDoor[i + 1] = nextRoom[i + 1];
+                    nextDoor[2*i] = doorCoordinates[2*i];
+                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1] - tileHeight;
 
                 }
                 else if(doorDirections[i] == 1)
                 {
-                    doorCoordinates[i] = outerCoordinates[4];
-                    doorCoordinates[i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+                    doorCoordinates[2*i] = outerCoordinates[4];
+                    doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
 
-                    nextRoom[i] =  doorCoordinates[i] + 1;
-                    nextDoor[i] = nextRoom[i];
+                    nextDoor[2*i] = doorCoordinates[2*i] + tileWidth;
+                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
 
                 }
                 else if(doorDirections[i] == 2)
                 {
-                    doorCoordinates[i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
-                    doorCoordinates[i + 1] = outerCoordinates[7];
+                    doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
+                    doorCoordinates[2*i + 1] = outerCoordinates[7];
 
-                    nextRoom[i + 1] =  doorCoordinates[i + 1] - 1;
-                    nextDoor[i + 1] = nextRoom[i + 1];
+                    nextDoor[2*i] = doorCoordinates[2*i];
+                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1] + tileHeight;
 
                 }
                 else if(doorDirections[i] == 3)
                 {
-                    doorCoordinates[i] = outerCoordinates[0];
-                    doorCoordinates[i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+                    doorCoordinates[2*i] = outerCoordinates[0];
+                    doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
 
-                    nextRoom[i] =  doorCoordinates[i] - 1;
-                    nextDoor[i] = nextRoom[i];
+                    nextDoor[2*i] = doorCoordinates[2*i] - tileWidth;
+                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
 
                 }
 
-                nextDoor[i] = doorCoordinates[i];
-                List<Wall> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[i], doorCoordinates[i + 1], Wall.class);
+                List<Wall> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[2*i], doorCoordinates[2*i + 1], Wall.class);
 
+                tooCloseDoor = false;
                 for(Wall currWall:wallsToRemove)
                 {
                     if(currWall.doorsInRange())
@@ -209,11 +209,13 @@ public class Room extends hackedActor
                     else
                     {
                         getDungeon().removeObjects(wallsToRemove);
-                        getDungeon().addObject(new Door(), doorCoordinates[i], doorCoordinates[i + 1]);
+                        getDungeon().addObject(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1]);
                     }
                 }
 
-            }while(checkTooCloseRoom(Arrays.copyOfRange(doorCoordinates, i, i+2), doorDirections[i]) && tooCloseDoor);
+            }while(checkTooCloseRoom() && tooCloseDoor);
+            
+            //randomRoom(i);
         }
 
     }
@@ -252,7 +254,7 @@ public class Room extends hackedActor
     /*
      * checks if another room is too close to the door
      */
-    public boolean checkTooCloseRoom(int[] doorCoordinates, int direction)
+    public boolean checkTooCloseRoom()
     {
 
         List<Room> otherRoomsInRange = getObjectsInRange(getDungeon().roomDistance , Room.class);
@@ -265,15 +267,39 @@ public class Room extends hackedActor
     }
 
     /*
-     * creates the new Rooms
+     * creates the new Room
      */
-    public void randomRoom()
+    public void randomRoom(int number)
     {
+        int[] entrance = new int[2];
+
+        entrance[0] = nextDoor[2*number];
+        entrance[1] = nextDoor[2*number + 1];
+
+        int nextWidth = Greenfoot.getRandomNumber(7) + 6;
+        int nextHeight = Greenfoot.getRandomNumber(7) + 6;
+
+        int nextX = entrance[0];
+        int nextY = entrance[1];
+
+        if(doorDirections[number] == 0 || doorDirections[number] == 2)
+        {
+            nextX = nextX - nextWidth/2 * tileWidth;// + getDungeon().getOffset();
+        }
+        else if(doorDirections[number] == 1 || doorDirections[number] == 3)
+        {
+            nextY = nextY - nextHeight/2 * tileHeight; //+ getDungeon().getOffset();
+        }
+
         if(!getDungeon().bossRoomSpawned)
         {
-            if(Greenfoot.getRandomNumber(100) = getDungeon().bossChance)
+            if(Greenfoot.getRandomNumber(100) <= getDungeon().bossRoomChance)
             {
-                getDungeon.addObject(new bossRoom(nextRoom[number],nextRoom[number+1],),nextRoom[number],nextRoom[number+1])
+                getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+            }
+            else
+            {
+                getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
             }
         }
 

@@ -8,9 +8,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class bossRoom extends Room
 {
-        public bossRoom(int x, int y, int width, int height)
+        public bossRoom(int x, int y, int width, int height, int[] entrance)
     {
-        super( x, y, width, height);
+        super( x, y, width, height, entrance);
     }
     /**
      * Act - do whatever the BossRoom wants to do. This method is called whenever
