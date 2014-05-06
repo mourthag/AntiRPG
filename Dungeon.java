@@ -28,7 +28,7 @@ public class Dungeon extends World
     public int offset = 5;                          //possible offset for the distance of the Room
     
     public boolean bossRoomSpawned = false;
-    public int bossRoomChance = 20;                 //Chance in percent of spawning a bossRoom
+    public int bossRoomChance = 1;                 //Chance in percent of spawning a bossRoom
 
     /**
      * Constructor for objects of class Dungeon.

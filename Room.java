@@ -214,7 +214,10 @@ public class Room extends hackedActor
                 }
 
             }while(checkTooCloseRoom() && tooCloseDoor);
-            
+
+            /*
+             * Rufe die Funktion am besten von Hand auf... i ist die Numer der Tür, an der ein neuer Raum erzeugt werden soll
+             */
             //randomRoom(i);
         }
 
@@ -296,11 +299,16 @@ public class Room extends hackedActor
             if(Greenfoot.getRandomNumber(100) <= getDungeon().bossRoomChance)
             {
                 getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+                getDungeon().bossRoomSpawned = true;
             }
             else
             {
                 getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
             }
+        }
+        else
+        {
+             getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
         }
 
     }
