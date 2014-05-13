@@ -7,5 +7,5 @@ comment2.params=
 comment2.target=void\ movement()
 comment3.params=
 comment3.target=void\ subSpecific()
-comment3.text=\r\n\ Do\ stuff\ only\ players\ but\ not\ tiles\ do\r\n
+comment3.text=\n\ Do\ stuff\ only\ players\ but\ not\ tiles\ do\n
 numComments=4

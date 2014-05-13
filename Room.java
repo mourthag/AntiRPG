@@ -156,7 +156,9 @@ public class Room extends hackedActor
                 random = Greenfoot.getRandomNumber(4);
             }while(blockedWalls[random]);
 
-            doorDirections[i] = random;
+            if(i < doorDirections.length){
+                doorDirections[i] = random;
+            }
 
             do
             {
@@ -308,7 +310,7 @@ public class Room extends hackedActor
         }
         else
         {
-             getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+            getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
         }
 
     }
