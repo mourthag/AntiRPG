@@ -156,9 +156,11 @@ public class Room extends hackedActor
                 random = Greenfoot.getRandomNumber(4);
             }while(blockedWalls[random]);
 
-            if(i < doorDirections.length){
-                doorDirections[i] = random;
+            if(i > doorDirections.length){
+                //BAD
             }
+
+            doorDirections[i] = random;
 
             do
             {
