@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.lang.Math;
 
 /**
  * The World is called Dungeon.
@@ -37,7 +38,7 @@ public class Dungeon extends World
     public Dungeon()
     {   
         super(frameWidth, frameHeight, 1);
-
+        
         //color the background black
         GreenfootImage background = getBackground();
         background.setColor(Color.BLACK);
@@ -53,6 +54,8 @@ public class Dungeon extends World
         addObject(new Player(), 150, 150);
 
         startUpRoom( 100,100,10,10);
+        
+        addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
     }
 
     /*
