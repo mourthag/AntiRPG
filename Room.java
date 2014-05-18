@@ -5,9 +5,6 @@ import java.util.Arrays;
 /**
  *A Class that contains the subclasses for the specific Rooms
  *a rectangle room is the standart shape
- * 
- * @author (your name) 
- * @version (a version number or a date)
  */
 public class Room extends hackedActor
 {

@@ -3,9 +3,6 @@ import java.awt.Color;
 
 /**
  * Write a description of class StarterRoom here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
  */
 public class starterRoom extends Room
 {

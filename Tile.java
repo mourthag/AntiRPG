@@ -4,43 +4,52 @@ import java.lang.*;
 import java.util.List;
 
 /**
- * "Tiles" is the overall class which is included to manage 
- * global settings for every object in the world
- * 
- * @author mourthag, t4b
+ * Tiles are our kind of Actors, with some additional features.
  */
 public class Tile extends hackedActor
 {
+    //Tile's images
     GreenfootImage tileImageVisible;
     GreenfootImage tileImageInvisible;
     boolean tileImageVisibleDefault; //choose whether tile is usually visible to player
-    float Xaccurate;
-    float Yaccurate;
+    //Tile's location and orientation
+    boolean accXYRInit;
+    float accX;
+    float accY;
+    float accR;
+
     float speed; //speed in pixels/act, automatically initialized to 0
+
     boolean[] tileHeightmap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
     int tileHeight; //height
 
     public Tile()
     {
+        //set up Tile's images
         tileImageVisible = new GreenfootImage("none.png");
         tileImageInvisible = new GreenfootImage("obfuscated.png");
         tileImageVisibleDefault = false;
+
+        //set up Tile's heightmap
         tileHeight = 2;
         tileHeightmap = new boolean[tileHeight]; 
         for(int h=0; h<tileHeight; h++) //default tile isn't solid at all
         {
             tileHeightmap[h]=false;
         }
+
+        //set up Tile's location and orientation
+        accXYRInit=false;
     }
 
     //run when placing the object in the world
     @Override
     protected void addedToWorld(World world)
     {
-        //scale images
-        Dungeon dungeon = (Dungeon) world;
-        tileImageInvisible.scale(dungeon.tileWidth, dungeon.tileHeight);
-        tileImageVisible.scale(dungeon.tileWidth, dungeon.tileHeight);
+        //scale Tile's images to tile size of the world
+        tileImageInvisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        tileImageVisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+
         //set default image
         if(tileImageVisibleDefault){
             setImage(tileImageVisible);
@@ -48,9 +57,29 @@ public class Tile extends hackedActor
             setImage(tileImageInvisible);
         }
 
-        //initialize accurate position storage...
-        Xaccurate = getX();
-        Yaccurate = getY();
+        //initialize accurate location and orientation storage
+        if(!accXYRInit){
+            accXYRInit();
+        } else{
+            accXYRUpdate();
+        }
+    }
+
+    public void accXYRInit(float x, float y, float r){
+        accX=x;
+        accY=y;
+        accR=r;
+        accXYRInit=true;
+    }
+
+    public void accXYRInit(){
+        accXYRInit(getX(), getY(), getRotation());
+    }
+
+    public void accXYRUpdate()
+    {
+        setLocation(Math.round(accX), Math.round(accY));
+        setRotation(Math.round(accR));
     }
 
     public void setVisibility(boolean visible)
@@ -63,23 +92,18 @@ public class Tile extends hackedActor
         }
     }
 
-    public void updatePreciseLocation(float x, float y)
-    {
-        setLocation(Math.round(x), Math.round(y));
-    }
-
     // kind of like smoothMover, but without the unnecessary features
     //todo: collisions
     public void move(float x, float y)
     {
-        Xaccurate += x;
-        Yaccurate += y;
-        updatePreciseLocation(Xaccurate, Yaccurate);
+        accX += x;
+        accY += y;
+        accXYRUpdate();
         if(colliding()) // just reverse the move before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
         {
-            Xaccurate -= x;
-            Yaccurate -= y;
-            updatePreciseLocation(Xaccurate, Yaccurate);
+            accX -= x;
+            accY -= y;
+            accXYRUpdate();
         }
     }
 

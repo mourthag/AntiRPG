@@ -2,9 +2,6 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
 * Some hacks to the actor class, because the actor class is like the rest of Greenfoot (a piece of shit)
-*
-* @author (your name)
-* @version (a version number or a date)
 */
 public class hackedActor extends Actor
 {

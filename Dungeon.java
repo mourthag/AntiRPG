@@ -10,8 +10,6 @@ import java.lang.Math;
  * The World is called Dungeon.
  * The Dungeon includes several rooms and roomtypes which will be spawned randomly at the beginning of a Level. 
  * The number of rooms and monsters which are spawned is relative to the difficulty level which is raised after each boss.
- * 
- * @author mourthag,t4b
  */
 public class Dungeon extends World
 {

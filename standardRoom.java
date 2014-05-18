@@ -2,9 +2,6 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
  * Write a description of class Room here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
  */
 public class standardRoom extends Room
 {
@@ -12,6 +9,7 @@ public class standardRoom extends Room
     {
         super( x, y, width, height, entrance);
     }
+    
     /**
      * Act - do whatever the Room wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.

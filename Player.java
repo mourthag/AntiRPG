@@ -3,15 +3,12 @@ import java.util.List;
 
 /**
  * Write a description of class Player here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
  */
 public class Player extends Tile
 {
     int viewingRange;
     public Player(){
-        viewingRange = 800;  //TODO: make the Range dependet to the size of the tiles
+        viewingRange = 800;  //TODO: make the Range dependent of the size of the tiles
         speed=1;
         tileImageVisible = new GreenfootImage("player.png"); // choose image
         tileImageVisibleDefault = true; //players are visible by default
