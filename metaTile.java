@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A metaTile refers to multiple Tiles. It can be used to perform operations on those Tiles and to store additional information on a group of Tiles.
@@ -17,7 +18,7 @@ public class metaTile extends hackedActor
      * There is nothing to do, really. Everything happens when it is added to the world.
      */
     public metaTile(){
-
+        tiles = new ArrayList<Tile>();
     }
 
     /**
@@ -25,6 +26,9 @@ public class metaTile extends hackedActor
      */
     @Override
     protected void addedToWorld(World world){
+        GreenfootImage image = new GreenfootImage("none.png");
+        image.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        setImage(image);
         for(Tile tileToPlace : tiles){
             getDungeon().addObject(tileToPlace, 1337, 1337); //location param is ignored by our Tiles
         }
@@ -34,7 +38,7 @@ public class metaTile extends hackedActor
      * Add a Tile to this metaTile.
      * Can be used with completely new Tiles which don't yet have X/Y/R. If they do, this method doesn't care and overwrites the values.
      */
-    void add(Tile tileToAdd, float x, float y, float r){
+    public void add(Tile tileToAdd, float x, float y, float r){
         if(!tiles.contains(tileToAdd)){ //If tileToAdd isn't already part of this metaTile
             tiles.add(tileToAdd);
             tileToAdd.accXYRInit(x, y, r);
@@ -49,17 +53,28 @@ public class metaTile extends hackedActor
      * This method assumes the Tile already has X/Y/R
      * Pay attention, it FAILS SILENTLY if the tileToAdd.accXYRInit == false.
      */
-    void add(Tile tileToAdd){
+    public void add(Tile tileToAdd){
         if(tileToAdd.accXYRInit){
             add(tileToAdd, tileToAdd.accX, tileToAdd.accY, tileToAdd.accR);
         }
     }
 
+    public void addLine(Tile tile, int startX, int startY, int length, boolean horizontal, boolean vertical){
+        int x = horizontal ? 1 : 0;
+        int y = vertical ? 1 : 0;
+        float r = tile.accXYRInit ? tile.accR : 0;
+        for(int i=0; i<length; i++){
+            add(new Tile(tile), startX + x*i*getDungeon().tileWidth, startY + y*i*getDungeon().tileHeight, r);
+        }
+    }
+    
+    //public void addSquare(Tile tile,
+
     /**
      * Separate a Tile from this metaTile.
      * Pay attention, it fails silently when used on Tiles which aren't actually in metaTile.
      */
-    void separate(Tile tileToRemove){
+    public void separate(Tile tileToRemove){
         if(tiles.contains(tileToRemove)){
             tiles.remove(tileToRemove);
         }
@@ -69,20 +84,20 @@ public class metaTile extends hackedActor
      * Remove a Tile from this metaTile and the World.
      * Pay attention, it fails silently when used on Tiles which aren't actually in metaTile.
      */
-    void remove(Tile tileToRemove){
+    public void remove(Tile tileToRemove){
         if(tiles.contains(tileToRemove)){
             tiles.remove(tileToRemove);
             tileToRemove.getDungeon().removeObject(tileToRemove); //Greenfoot at it's best.
         }
     }
 
-    void move(float x, float y){
+    public void move(float x, float y){
         for(Tile tile : tiles){
             tile.move(x, y);
         }
     }
 
-    void subSpecific()
+    public void subSpecific()
     {
         //for subclasses to overwrite
     }

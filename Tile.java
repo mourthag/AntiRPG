@@ -42,6 +42,18 @@ public class Tile extends hackedActor
         accXYRInit=false;
     }
 
+    /**
+     * Copy constructor
+     */
+    public Tile(Tile another){
+        this.tileImageVisible = another.tileImageVisible;
+        this.tileImageInvisible = another.tileImageInvisible;
+        this.tileImageVisibleDefault = another.tileImageVisibleDefault;
+
+        this.tileHeight = another.tileHeight;
+        this.tileHeightmap = another.tileHeightmap;
+    }
+
     //run when placing the object in the world
     @Override
     protected void addedToWorld(World world)

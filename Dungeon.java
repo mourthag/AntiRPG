@@ -49,9 +49,9 @@ public class Dungeon extends World
         //tmp playground
         //addObject(new Wall(), 45,45);
         //addObject(new Tile(), 70,45);
-        addObject(new Player(), 150, 150);
+        addObject(new metaTile(), 150, 150);
 
-        startUpRoom( 100,100,10,10);
+        //startUpRoom( 100,100,10,10);
         
         addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
     }
