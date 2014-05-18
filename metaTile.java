@@ -59,6 +59,11 @@ public class metaTile extends hackedActor
         }
     }
 
+    /**
+     * Adds a lines of Tiles to the metaTile.
+     * tile: Each Tile this method adds is a copy of this Tile. Couldn't find a better way, doesn't work with all Tiles (yet, I guess I can restructure some stuff so it does).
+     * Works with static Tiles like Walls and Floor right now, which don't differ too much from the Tile class.
+     */
     public void addLine(Tile tile, int startX, int startY, int length, boolean horizontal, boolean vertical){
         int x = horizontal ? 1 : 0;
         int y = vertical ? 1 : 0;
@@ -67,8 +72,26 @@ public class metaTile extends hackedActor
             add(new Tile(tile), startX + x*i*getDungeon().tileWidth, startY + y*i*getDungeon().tileHeight, r);
         }
     }
-    
-    //public void addSquare(Tile tile,
+
+    /**
+     * Adds a square of tiles to the metaTile.
+     * See addLine()
+     * fill: true is a filled square, false an outline
+     */
+    public void addSquare(Tile tile, int startX, int startY, int width, int height, boolean fill){
+        if(fill){
+            for(int i=0; i<height; i++){
+
+                addLine(tile, startX, startY + i*getDungeon().tileHeight, width, true, false);
+
+            }
+        } else {
+            addLine(tile, startX, startY, width-1, true, false);
+            addLine(tile, startX+(width-1)*getDungeon().tileWidth, startY, height-1, false, true);
+            addLine(tile, startX+getDungeon().tileWidth, startY+(height-1)*getDungeon().tileHeight, width-1, true, false);
+            addLine(tile, startX, startY+getDungeon().tileWidth, height-1, false, true);
+        }
+    }
 
     /**
      * Separate a Tile from this metaTile.

@@ -53,7 +53,7 @@ public class Dungeon extends World
 
         //startUpRoom( 100,100,10,10);
         
-        addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
+        //addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
     }
 
     /*
