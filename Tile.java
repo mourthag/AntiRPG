@@ -48,6 +48,7 @@ public class Tile extends hackedActor
 
         //set up Tile's location and orientation
         accXYRInit=false;
+        accR = 0;
     }
 
     /**
@@ -82,11 +83,26 @@ public class Tile extends hackedActor
 
     /*
      * Set up Tile's image
+     * Assumes accR contains a correct value and rotates the image accordingly, should be a safe assumption
      */
     public void setUpImage(){
         image = new GreenfootImage(imageLoc);
-        image.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        int width = image.getWidth();
+        int height = image.getHeight();
+        image.rotate((int)accR);
+        //calculate the size the image should be scaled to
+        int rwidth = Math.round( (image.getWidth() / width) * getDungeon().tileWidth );
+        int rheight = Math.round( (image.getHeight() / height) * getDungeon().tileHeight );
+        image.scale(rwidth, rheight);
         setImage(image);
+    }
+
+    /*
+     * Set up Tile's image with the image loaded from loc
+     */
+    public void setUpImage(String loc){
+        imageLoc = loc;
+        setUpImage();
     }
 
     /*
@@ -111,16 +127,9 @@ public class Tile extends hackedActor
 
     public void setUpColMap(){
         GreenfootImage rotatedImage = new GreenfootImage(image);
-        rotatedImage.rotate(getRotation());
+        // !! don't leave like this
+        //rotatedImage.rotate(getRotation());
         setUpColMap(rotatedImage);
-    }
-
-    /*
-     * Set up Tile's image with the image loaded from loc
-     */
-    public void setUpImage(String loc){
-        imageLoc = loc;
-        setUpImage();
     }
 
     /*
@@ -142,11 +151,13 @@ public class Tile extends hackedActor
 
     /*
      * Set Greenfoot location/rotation values to our internal ones.
+     * (not rotation right now, probably never, Greenfoot just messes up when we use it)
      */
     public void accXYRUpdate()
     {
         setLocation(Math.round(accX), Math.round(accY));
-        setRotation(Math.round(accR));
+        //ignoring rotation, Greenfoot just messes up anyway
+        //setRotation(Math.round(accR));
     }
 
     // kind of like smoothMover, but without the unnecessary features
@@ -156,20 +167,17 @@ public class Tile extends hackedActor
         accY += y;
         accXYRUpdate();
         if(colliding()){ // just reverse the move before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
-            accX -= x;
-            accY -= y;
-            accXYRUpdate();
+            move(-x,-y);
         }
     }
 
     public void rotate(float r){
         accR += r;
+        setUpImage();
         setUpColMap();
         accXYRUpdate();
-        if(colliding()){
-            accR -= r;
-            setUpColMap();
-            accXYRUpdate();
+        if(colliding()){ // just reverse the rotation before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
+            rotate(-r);
         }
     }
 
