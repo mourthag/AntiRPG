@@ -54,8 +54,8 @@ public class Room extends metaTile
         //if a entrance is given create the door
         if(curEntrance.length == 2)
         {
-            getDungeon().removeObjects(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Tile.class));
-            getDungeon().addObject(new Door(), curEntrance[0], curEntrance[1]);
+            remove(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Tile.class));
+            add(new Door(), curEntrance[0], curEntrance[1], 0);
         }
 
         specificContent();
