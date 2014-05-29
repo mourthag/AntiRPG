@@ -8,7 +8,7 @@ public class Door extends Tile
 {
     public Door()
     {
-         imageVisible = new GreenfootImage("lift-closed.png");
+         imageLoc = "lift-closed.png";
          //tileHeightmap[0]
     }
 }

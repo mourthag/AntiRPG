@@ -7,7 +7,7 @@ public class Floor extends Tile
 {
     public Floor() 
     {
-        imageVisible = new GreenfootImage("rivets.jpg"); // choose image
+        imageLoc = "rivets.jpg"; // choose image
         heightMap[0] = true; //floors are at height 0
     }    
 }

@@ -9,7 +9,7 @@ public class Wall extends Tile
 
     public Wall() 
     {
-        imageVisible = new GreenfootImage("brick.jpg"); // choose image
+        imageLoc = "brick.jpg"; // choose image
         heightMap[0] = true; //floors are at height 0
         heightMap[1] = true; //... and 1.
     }

@@ -88,10 +88,14 @@ public class metaTile extends hackedActor
 
             }
         } else {
+            //top
             addLine(tile, startX, startY, width-1, true, false);
+            //right
             addLine(tile, startX+(width-1)*getDungeon().tileWidth, startY, height-1, false, true);
+            //bottom
             addLine(tile, startX+getDungeon().tileWidth, startY+(height-1)*getDungeon().tileHeight, width-1, true, false);
-            addLine(tile, startX, startY+getDungeon().tileWidth, height-1, false, true);
+            //left
+            addLine(tile, startX, startY+getDungeon().tileWidth-1, height-1, false, true);
         }
     }
 
@@ -113,6 +117,16 @@ public class metaTile extends hackedActor
         if(tiles.contains(tileToRemove)){
             tiles.remove(tileToRemove);
             tileToRemove.getDungeon().removeObject(tileToRemove); //Greenfoot at it's best.
+        }
+    }
+
+    /**
+     * Delete (remove from world and destroy) all Tile's belonging to that metaTile
+     */
+    public void empty(){
+        while(tiles.size() > 0){
+            Tile toRemove = tiles.remove(0);
+            toRemove.getDungeon().removeObject(toRemove); //Greenfoot at it's best.
         }
     }
 

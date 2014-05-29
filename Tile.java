@@ -8,37 +8,38 @@ import java.util.List;
  */
 public class Tile extends hackedActor
 {
-    //Tile's images
-    GreenfootImage imageVisible;
-    GreenfootImage imageInvisible;
-    boolean imageVisibleDefault; //choose whether tile is usually visible to player
+    //Tile's image
+    String imageLoc; //where to get the image file
+    private GreenfootImage image; //the GreenfootImage
+    boolean visibleAlways; //choose whether tile is visible to player even when it shouldn't be
+
     //Tile's location and orientation
     boolean accXYRInit;
     float accX;
     float accY;
     float accR;
 
-    //The parrent MetaTile whose member this Tile is
+    //The parent MetaTile whose member this Tile is
     metaTile parent;
 
-    float speed; //speed in pixels/act, automatically initialized to 0
+    //speed in pixels/act, automatically initialized to 0
+    float speed;
 
     //Tile's geometry
     static int height; //height
-    static boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
-    static boolean[][] colMap;
+    boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
+    boolean[][] colMap; // collision map
 
     public Tile()
     {
         //set up Tile's images
-        imageVisible = new GreenfootImage("none.png");
-        imageInvisible = new GreenfootImage("obfuscated.png");
-        imageVisibleDefault = false;
+        imageLoc = "none.png";
+        visibleAlways = false;
 
         //set up Tile's height map
-        height = 2;
-        heightMap = new boolean[height]; 
-        for(int h=0; h<height; h++) //default tile isn't solid at all
+        height = 2; // Don't change in subclasses or the system will go bananas (I guarantee for nothing)
+        heightMap = new boolean[height]; //Set up a completely non-solid height map
+        for(int h=0; h<height; h++) 
         {
             heightMap[h]=false;
         }
@@ -51,30 +52,25 @@ public class Tile extends hackedActor
 
     /**
      * Copy constructor
+     * Doesn't really work properly yet.
      */
     public Tile(Tile another){
-        this.imageVisible = another.imageVisible;
-        this.imageInvisible = another.imageInvisible;
-        this.imageVisibleDefault = another.imageVisibleDefault;
+        this.imageLoc = another.imageLoc;
+        this.visibleAlways = another.visibleAlways;
 
         this.height = another.height;
         this.heightMap = another.heightMap;
     }
 
-    //run when placing the object in the world
+    /*
+     * Run when placing the object in the world
+     */
     @Override
     protected void addedToWorld(World world)
     {
-        //scale Tile's images to tile size of the world
-        imageInvisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
-        imageVisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        setUpImage();
 
-        //set default image
-        if(imageVisibleDefault){
-            setImage(imageVisible);
-        } else {
-            setImage(imageInvisible);
-        }
+        setUpColMap();
 
         //initialize accurate location and orientation storage
         if(!accXYRInit){
@@ -84,10 +80,42 @@ public class Tile extends hackedActor
         }
     }
 
-    public void setUpImages(){
-        //Working here right now
+    /*
+     * Set up Tile's image
+     */
+    public void setUpImage(){
+        image = new GreenfootImage(imageLoc);
+        image.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        setImage(image);
     }
 
+    /*
+     * Sets up the Tile's collision map based on it's image
+     */
+    public void setUpColMap(){
+        colMap = new boolean[image.getWidth()][image.getHeight()];
+        if(!(image.getTransparency() == 0)){
+            for(int i=0; i < image.getWidth(); i++){
+                for(int j=0; j < image.getHeight(); j++){
+                    colMap[i][j] = image.getColorAt(i, j).getAlpha() != 0;
+                }
+            }
+        } else {
+            //everything = false, no collisions
+        }
+    }
+
+    /*
+     * Set up Tile's image with the image loaded from loc
+     */
+    public void setUpImage(String loc){
+        imageLoc = loc;
+        setUpImage();
+    }
+
+    /*
+     * Initialize our internal location/rotation tracking
+     */
     public void accXYRInit(float x, float y, float r){
         accX=x;
         accY=y;
@@ -95,28 +123,23 @@ public class Tile extends hackedActor
         accXYRInit=true;
     }
 
+    /*
+     * Initialize our internal location/rotation tracking by taking Greenfoot's values
+     */
     public void accXYRInit(){
         accXYRInit(getX(), getY(), getRotation());
     }
 
+    /*
+     * Set Greenfoot location/rotation values to our internal ones.
+     */
     public void accXYRUpdate()
     {
         setLocation(Math.round(accX), Math.round(accY));
         setRotation(Math.round(accR));
     }
 
-    public void setVisibility(boolean visible)
-    {
-        //sets visibility to value visible
-        if(visible){
-            setImage(imageVisible);
-        } else {
-            setImage(imageInvisible);
-        }
-    }
-
     // kind of like smoothMover, but without the unnecessary features
-    //todo: collisions
     public void move(float x, float y)
     {
         accX += x;
@@ -130,6 +153,31 @@ public class Tile extends hackedActor
         }
     }
 
+    /*
+     * Returns true when this Tile's collision map intersects with oColMap which is at oX|oY
+     * oColMap is assumed to have the same size as this Tile's colMap
+     */
+    public boolean colMapIntersect(boolean[][] oColMap, int oX, int oY){
+
+        boolean selfStartX = oX>=getX() ? true : false;
+        boolean selfStartY = oY>=getY() ? true : false;
+
+        int startX = Math.abs(oX-getX());
+        int startY = Math.abs(oY-getY());
+
+        int dsx = selfStartX ? startX : 0;
+        int dsy = selfStartY ? startY : 0;
+        int dox = selfStartX ? 0 : startX;
+        int doy = selfStartY ? 0 : startY;
+
+        for(int i=0; i < getDungeon().tileWidth-startX; i++){
+            for(int j=0; j < getDungeon().tileHeight-startY; j++){
+                if(oColMap[i+dox][j+doy] && colMap[i+dsx][j+dsy]) return(true);
+            }
+        }
+        return(false);
+    }
+
     public boolean colliding()
     {
         List<Tile> tilesVisible = getIntersectingObjects(Tile.class); //visually intersecting tiles
@@ -139,7 +187,9 @@ public class Tile extends hackedActor
             {
                 if(otherTile.heightMap[i] && heightMap[i]) //logically intersecting?
                 {
-                    return(true);
+                    if(colMapIntersect(otherTile.colMap, otherTile.getX(), otherTile.getY())){// collision map intersecting?
+                        return(true);
+                    }
                 }
             }
         }
@@ -165,8 +215,6 @@ public class Tile extends hackedActor
 
     public void act() 
     {
-        // go to default state each act (before player act)
-        setVisibility(imageVisibleDefault);
         // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
         subSpecific();
     }

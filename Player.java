@@ -10,19 +10,9 @@ public class Player extends Tile
     public Player(){
         viewingRange = 800;  //TODO: make the Range dependent of the size of the tiles
         speed=1;
-        imageVisible = new GreenfootImage("player.png"); // choose image
-        imageVisibleDefault = true; //players are visible by default
+        imageLoc = "player.png"; // choose image
+        visibleAlways = true; //players are visible by default
         heightMap[1] = true; //the player is situated at height 1 and is solid
-    }
-
-    //make stuff visible which should be visible
-    private void adjustVisibility()
-    {
-        List<Tile> tilesVisible = getObjectsInRange(viewingRange, Tile.class);
-        for(Tile tile : tilesVisible)
-        {
-            tile.setVisibility(true);
-        }
     }
 
     private void movement()
@@ -30,11 +20,14 @@ public class Player extends Tile
         //move, and pay attention not to be faster diagonally
         int x=0;
         int y=0;
-        float factor=1;
+
         if(Greenfoot.isKeyDown("right")) x++;
         if(Greenfoot.isKeyDown("left")) x--;
         if(Greenfoot.isKeyDown("down")) y++;
         if(Greenfoot.isKeyDown("up")) y--;
+        if((x == 0) && (y == 0)) return; // nothing to do, spare us the call to move()
+
+        float factor=1;
         if(x != 0 && y != 0) factor=(float)0.7071; // factor = squareRoot(0.5)
         move(x*speed*factor, y*speed*factor);
     }
@@ -46,6 +39,5 @@ public class Player extends Tile
     public void subSpecific() 
     {
         movement();
-        adjustVisibility();
     }    
 }

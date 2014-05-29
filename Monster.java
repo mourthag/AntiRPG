@@ -7,7 +7,7 @@ public class Monster extends Tile
 {
     public Monster() 
     {
-        imageVisible = new GreenfootImage("baby2.png"); // choose image
+        imageLoc = "baby2.png"; // choose image
         heightMap[1] = true; //monsters are situated at height 1 and are solid
     }    
 }
