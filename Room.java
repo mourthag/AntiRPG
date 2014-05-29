@@ -54,7 +54,7 @@ public class Room extends metaTile
         //if a entrance is given create the door
         if(curEntrance.length == 2)
         {
-            remove(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Tile.class));
+            remove(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Tile.class)); //remove the Tiles where the new Door is gonna take place and place it
             add(new Door(), curEntrance[0], curEntrance[1], 0);
         }
 
@@ -69,9 +69,9 @@ public class Room extends metaTile
             int limit = 0;
             for(boolean curBlocked: blockedWalls)
             {
-                if(!curBlocked)limit++;
+                if(!curBlocked)limit++;         //increase the limit by every not blocked Wall
             }
-            doorCount = Greenfoot.getRandomNumber(2*limit);
+            doorCount = Greenfoot.getRandomNumber(2*limit);     //now randomize it
         }
         if(doorCount < doorMinimum)doorCount = doorMinimum;
 
@@ -115,11 +115,15 @@ public class Room extends metaTile
 
     }
 
+    /**
+     * Sets a random Door over non blocked Walls
+     */
     public void setDoor(int i)
     {
         boolean tooCloseDoor = false;
         do
         {
+            colliding = false;
             tooCloseDoor = false;
 
             //randomly picks a Wall and redos if its blocked
@@ -166,6 +170,7 @@ public class Room extends metaTile
             // 
             //                 }
 
+            //Get the Walls that will be 
             List<Tile> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[2*i], doorCoordinates[2*i + 1], Tile.class);
 
             for(Tile currWall:wallsToRemove)
@@ -178,7 +183,13 @@ public class Room extends metaTile
                 }
             }
 
-        }while(tooCloseDoor);
+
+        /*
+         * Rufe die Funktion am besten von Hand auf... i ist die Numer der Tür, an der ein neuer Raum erzeugt werden soll
+         * Momentan läuft das ganze noch per Hand. Wenn ich die Abstandserkennung implementiert habe,dann rufe ich sie so auf
+         */
+        //randomRoom(i);
+        }while(tooCloseDoor || colliding);
 
         /*
          * Rufe die Funktion am besten von Hand auf... i ist die Numer der Tür, an der ein neuer Raum erzeugt werden soll
@@ -247,6 +258,7 @@ public class Room extends metaTile
             nextY = nextY - nextHeight/2 * tileHeight; //+ getDungeon().getOffset();
         }
 
+        //create new Rooms that will be added later
         bossRoom nextBossRoom = new bossRoom(nextX, nextY, 9, 9,entrance);
         standardRoom nextStandardRoom = new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance);
 
@@ -257,20 +269,23 @@ public class Room extends metaTile
                 getDungeon().addObject(nextBossRoom, nextX, nextY);
                 getDungeon().bossRoomSpawned = true;
 
+                //remove it if it would collide with anything else
                 if(nextBossRoom.colliding())
                 {
                     colliding = true;
-                    getDungeon().removeObject(nextBossRoom);
+                    nextBossRoom.remove();
                 }
             }
             else
             {
                 getDungeon().addObject(nextStandardRoom, nextX, nextY);
                 getDungeon().bossRoomChance++;
+
+                //remove it if it would collide with anything else
                 if(nextStandardRoom.colliding())
                 {
                     colliding = true;
-                    getDungeon().removeObject(nextStandardRoom);
+                    nextStandardRoom.remove();
                 }
             }
         }
@@ -278,10 +293,12 @@ public class Room extends metaTile
         {
             getDungeon().addObject(nextStandardRoom, nextX, nextY);
             getDungeon().bossRoomChance++;
+
+            //remove it if it would collide with anything else
             if(nextStandardRoom.colliding())
             {
                 colliding = true;
-                getDungeon().removeObject(nextStandardRoom);
+                nextStandardRoom.remove();
             }
         }
 
