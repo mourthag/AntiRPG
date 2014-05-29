@@ -9,9 +9,8 @@ public class starterRoom extends Room
     public starterRoom(int x, int y, int width, int height)
     {
         super( x, y, width, height);
-        doorCount = 2;
     }
-    
+
     /**
      * Act - do whatever the StarterRoom wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -19,5 +18,14 @@ public class starterRoom extends Room
     public void act() 
     {
         // Add your action code here.
-    }    
+    } 
+
+    /**
+     * Add a player and some random Deco
+     */
+    @Override
+    public void specificContent()
+    {
+        getDungeon().addObject(new Player(), curX + 25, curY + 30);
+    }
 }

@@ -11,10 +11,8 @@ public class startScreen extends Screen
      */
     public void act() 
     {
-       if(Greenfoot.isKeyDown("enter"))
-       {
-          getDungeon().removeObject(this);      //Suicide
-        }
+      while(!Greenfoot.isKeyDown("enter"));
+                getDungeon().removeObject(this);      //Suicide
     } 
 
     public startScreen()

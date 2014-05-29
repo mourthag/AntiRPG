@@ -42,6 +42,7 @@ public class metaTile extends hackedActor
         if(!tiles.contains(tileToAdd)){ //If tileToAdd isn't already part of this metaTile
             tiles.add(tileToAdd);
             tileToAdd.accXYRInit(x, y, r);
+            tileToAdd.parent = this;
             if(getDungeon() != null){ //metaTile is already in a world
                 getDungeon().addObject(tileToAdd, 1337, 1337); //location param is ignored by our Tiles
             }
@@ -55,6 +56,7 @@ public class metaTile extends hackedActor
      */
     public void add(Tile tileToAdd){
         if(tileToAdd.accXYRInit){
+            tileToAdd.parent = this;
             add(tileToAdd, tileToAdd.accX, tileToAdd.accY, tileToAdd.accR);
         }
     }

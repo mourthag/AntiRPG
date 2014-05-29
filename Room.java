@@ -6,19 +6,18 @@ import java.util.Arrays;
  *A Class that contains the subclasses for the specific Rooms
  *a rectangle room is the standart shape
  */
-public class Room extends hackedActor
+public class Room extends metaTile
 {
     int tileWidth = getDungeon().tileWidth;
     int tileHeight = getDungeon().tileHeight;
-    int doorCount = Greenfoot.getRandomNumber(4);   //Number of Doors
+    int doorCount;                                   //number of Exits this room will have
     boolean[] blockedWalls;                         //the blocked Walls of this room
-    int[] outerCoordinates = new int[8];            //for easier handling
 
-    int[] doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
-    int[] doorDirections = new int[doorCount];     //int array for the direction of each door             
+    int[] doorCoordinates; //int array for the Coordinates of the Doors
+    int[] doorDirections;     //int array for the direction of each door             
     //0 = top   1 = right   2 = bottom  3 = left
 
-    int[] nextDoor = new int[doorCount * 2];          //Coords for the Entrance of these rooms
+    int[] nextDoor;          //Coords for the Entrance of these rooms
 
     //For handling them over to addedToWorld()
     int curX;           
@@ -27,12 +26,9 @@ public class Room extends hackedActor
     int curHeight;
     int[] curEntrance;
 
-    //inner coordinates for the floor
-    int innerWidth;
-    int innerHeight;
-    int innerX;
-    int innerY;
-
+    /**
+     * Initialize. Handle the parameters over for use in addedToWorld()
+     */
     public Room(int x, int y, int width, int height, int...entrance)
     {
         curX = x;
@@ -42,49 +38,52 @@ public class Room extends hackedActor
         curEntrance = entrance;
     }
 
+    /**
+     * Generate the room itself and goes on with more Rooms
+     */
     @Override
     protected void addedToWorld(World world)
     {
-        //Pack the Boarder Coordinates
-        outerCoordinates[0] = curX;                                    //Top Left
-        outerCoordinates[1] = curY;
-        outerCoordinates[2] = curX + (curWidth - 1) * tileWidth;          //Top Right
-        outerCoordinates[3] = curY;
-        outerCoordinates[4] = curX + (curWidth - 1) * tileWidth;          //Bottom Right
-        outerCoordinates[5] = curY + (curHeight - 1) * tileHeight;
-        outerCoordinates[6] = curX;                                    //Bottom Left
-        outerCoordinates[7] = curY + (curHeight - 1) * tileHeight;
-
-        //inner coordinates for the floor
-        innerWidth = curWidth - 2;
-        innerHeight = curHeight - 2;
-        innerX = curX + tileWidth;
-        innerY = curY + tileHeight;
-
-        //outer Boarders
-        //TODO: use outerCoordinates[]
-        createWallLine( curX, curY, true, curWidth);                                             //top
-        createWallLine( curX, curY + tileHeight, false, curHeight - 1);                          //left
-        createWallLine( innerX, outerCoordinates[7], true, curWidth - 1);                  //bottom
-        createWallLine( outerCoordinates[4], innerY, false, curHeight - 2);                //right
+        //Create the Walls and the Floor
+        addSquare(new Wall(), curX, curY, curWidth, curHeight, false);
+        addSquare(new Floor(), curX + tileWidth, curY + tileHeight, curWidth - 2, curHeight - 2, true);
 
         //if a entrance is given create the door
         if(curEntrance.length == 2)
         {
-            getDungeon().removeObjects(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Wall.class));
+            getDungeon().removeObjects(getDungeon().getObjectsAt(curEntrance[0], curEntrance[1], Tile.class));
             getDungeon().addObject(new Door(), curEntrance[0], curEntrance[1]);
         }
 
-        //Fill with Floor
-        for(int i = 0; i<innerHeight; i++)
-        {
-            createFloorLine(innerX , innerY + i*tileHeight, true, innerWidth);
-        }
+        specificContent();
 
         blockedWalls =  blockedWalls();
 
-        setDoors();                            //Delete Walls and replace them with Doors
+        if(doorCount == 0)     //if the doorCount hasnt been set already
+        {
+            int limit = 0;
+            for(boolean curBlocked: blockedWalls)
+            {
+                if(!curBlocked)limit++;
+            }
+            doorCount = Greenfoot.getRandomNumber(2*limit);
+        }
 
+        doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
+        doorDirections = new int[doorCount];     //int array for the direction of each door             
+        //0 = top   1 = right   2 = bottom  3 = left
+
+        nextDoor = new int[doorCount * 2];          //Coords for the Entrance of these rooms
+
+        setDoors();                            //Delete Walls and replace them with Doors      Spawn another Room if possible
+    }
+
+    /**
+     * Subclasses can override this to place Deco, Mobs, etc.
+     */
+    public void specificContent()
+    {
+        //For subclasses to Override
     }
 
     /**
@@ -96,82 +95,39 @@ public class Room extends hackedActor
 
     }   
 
-    /*
-     * Creates a Line of Walls
-     */
-    public void createWallLine(int startX, int startY, boolean horizontal, int length)
-    {
-        if (horizontal)
-        {
-            for(int i=0; i<length; i++)
-            {
-                getDungeon().addObject(new Wall(), startX + i*tileWidth, startY);
-            }
-        }
-        else
-        {
-            for(int j=0; j<length; j++)
-            {
-                getDungeon().addObject(new Wall(), startX, startY + j*tileHeight);
-            }
-        }
-    }
-
-    /*
-     * Creates a Line of Floor
-     */
-    public void createFloorLine(int startX, int startY, boolean horizontal, int length)
-    {
-        if (horizontal)
-        {
-            for(int i=0; i<length; i++)
-            {
-                getDungeon().addObject(new Floor(), startX + i*tileWidth, startY);
-            }
-        }
-        else
-        {
-            for(int j=0; j<length; j++)
-            {
-                getDungeon().addObject(new Floor(), startX, startY + j*tileHeight);
-            }
-        }
-    }
-
-    /*
-     * sets the Doors into the room
+    /**
+     * This Function will set Doors randomly over the outer Walls
+     * Blocked Walls are excluded and for each Door it will spawn a following Room
      */
     public void setDoors()
     {
         for(int i = 0; i<doorCount; i++)
         {
             boolean tooCloseDoor = false;
-
-            int random;
             do
             {
-                random = Greenfoot.getRandomNumber(4);
-            }while(blockedWalls[random]);
+                tooCloseDoor = false;
 
-            if(i < doorDirections.length){
+                //randomly picks a Wall and redos if its blocked
+                int random;
+                do random = Greenfoot.getRandomNumber(2) + 1;while(blockedWalls[random]);
+
                 doorDirections[i] = random;
-            }
 
-            do
-            {
-                if(doorDirections[i] == 0)
+                //set the coordinates for the Door and the following entrance
+                //                 if(doorDirections[i] == 0)
+                //                 {
+                //                     doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
+                //                     doorCoordinates[2*i + 1] = outerCoordinates[1];
+                // 
+                //                     nextDoor[2*i] = doorCoordinates[2*i];
+                //                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1] - tileHeight;
+                // 
+                //                 }
+                if(doorDirections[i] == 1)
                 {
-                    doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
-                    doorCoordinates[2*i + 1] = outerCoordinates[1];
-
-                    nextDoor[2*i] = doorCoordinates[2*i];
-                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1] - tileHeight;
-
-                }
-                else if(doorDirections[i] == 1)
-                {
-                    doorCoordinates[2*i] = outerCoordinates[4];
-                    doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+                    doorCoordinates[2*i] = getOtherX();
+                    doorCoordinates[2*i + 1] = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 1) * tileHeight;
 
                     nextDoor[2*i] = doorCoordinates[2*i] + tileWidth;
                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
@@ -179,32 +135,28 @@ public class Room extends hackedActor
                 }
                 else if(doorDirections[i] == 2)
                 {
-                    doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
-                    doorCoordinates[2*i + 1] = outerCoordinates[7];
+                    doorCoordinates[2*i] = curY + tileWidth + Greenfoot.getRandomNumber(curWidth - 1) * tileWidth;
+                    doorCoordinates[2*i + 1] = getOtherY();
 
                     nextDoor[2*i] = doorCoordinates[2*i];
                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1] + tileHeight;
 
                 }
-                else if(doorDirections[i] == 3)
+                //                 else if(doorDirections[i] == 3)
+                //                 {
+                //                     doorCoordinates[2*i] = outerCoordinates[0];
+                //                     doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+                // 
+                //                     nextDoor[2*i] = doorCoordinates[2*i] - tileWidth;
+                //                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
+                // 
+                //                 }
+
+                List<Tile> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[2*i], doorCoordinates[2*i + 1], Tile.class);
+
+                for(Tile currWall:wallsToRemove)
                 {
-                    doorCoordinates[2*i] = outerCoordinates[0];
-                    doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
-
-                    nextDoor[2*i] = doorCoordinates[2*i] - tileWidth;
-                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
-
-                }
-
-                List<Wall> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[2*i], doorCoordinates[2*i + 1], Wall.class);
-
-                tooCloseDoor = false;
-                for(Wall currWall:wallsToRemove)
-                {
-                    if(currWall.doorsInRange())
-                    {
-                        tooCloseDoor = true;
-                    }
+                    if(currWall.doorsInRange())tooCloseDoor = true;
                     else
                     {
                         getDungeon().removeObjects(wallsToRemove);
@@ -212,39 +164,41 @@ public class Room extends hackedActor
                     }
                 }
 
-            }while(checkTooCloseRoom() && tooCloseDoor);
+            }while(tooCloseDoor);
 
             /*
              * Rufe die Funktion am besten von Hand auf... i ist die Numer der Tür, an der ein neuer Raum erzeugt werden soll
+             * Momentan läuft das ganze noch per Hand. Wenn ich die Abstandserkennung implementiert habe,dann rufe ich sie so auf
              */
             //randomRoom(i);
         }
 
     }
 
-    /*
-     * checks which walls are blocked
+    /**
+     * Checks which are blocked by the Worldedges
+     * Returns a boolean Array
      */
     public boolean[] blockedWalls()
     {
         boolean[] blocked = new boolean[4]; //4 int        0 = top   1 = right   2 = bottom  3 = left; true = blocked false = available
 
-        if(outerCoordinates[0] < 10 * tileWidth) //TODO: make this rely on the difficulty
+        if(getX() < 10 * tileWidth) //TODO: make this rely on the difficulty
         {
             blocked[0] = true;         //top
 
         }
-        if(outerCoordinates[1] < 10 * tileHeight)
+        if(getY() < 10 * tileHeight)
         {
             blocked[3] = true;         //left
 
         }
-        if(outerCoordinates[6] >  getDungeon().frameWidth - 10 * tileWidth)
+        if(getOtherX() >  getDungeon().frameWidth - 10 * tileWidth)
         {
             blocked[1] = true;         //right
 
         }
-        if(outerCoordinates[7] > getDungeon().frameHeight - 10 * tileHeight)
+        if(getOtherY() > getDungeon().frameHeight - 10 * tileHeight)
         {
             blocked[2] = true;         //bottom
 
@@ -253,26 +207,14 @@ public class Room extends hackedActor
         return blocked;
     }
 
-    /*
-     * checks if another room is too close to the door
-     */
-    public boolean checkTooCloseRoom()
-    {
-
-        List<Room> otherRoomsInRange = getObjectsInRange(getDungeon().roomDistance , Room.class);
-        if(otherRoomsInRange.size() == 0)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /*
-     * creates the new Room
+    /**
+     * Creates a new Room at the given Door.
+     * It´s possible that a bossRoom will spawn. Normally it will be a standardRoom
      */
     public void randomRoom(int number)
     {
+        //TODO: -Metatiles
+        //      -Fix Bossroomchance
         int[] entrance = new int[2];
 
         entrance[0] = nextDoor[2*number];
@@ -302,14 +244,26 @@ public class Room extends hackedActor
             }
             else
             {
-                getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+                getDungeon().addObject(new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
             }
         }
         else
         {
-            getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+            getDungeon().addObject(new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
         }
 
+    }
+
+    public int getOtherX()
+    {
+
+        return curX + (curWidth - 1)*tileWidth;
+    }
+
+    public int getOtherY()
+    {
+
+        return curY + (curHeight - 1)*tileHeight;
     }
 }
 
