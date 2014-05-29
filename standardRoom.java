@@ -26,16 +26,16 @@ public class standardRoom extends Room
     public void specificContent()
     {
         int numberOfMonsters = Greenfoot.getRandomNumber(getDungeon().difficulty / 2);
-        
+
         for(int i = 0; i < numberOfMonsters; i++)
         {
             int monX = curX + tileWidth + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
             int monY = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
             int monType = Greenfoot.getRandomNumber(2);
             if(monType == 0)
-            getDungeon().addObject(new Monster1(), monX, monY);
+                add(new Monster1(), monX, monY, 0);
             else
-            getDungeon().addObject(new Monster2(), monX, monY);
+                add(new Monster2(), monX, monY, 0);
         }
     }
 
