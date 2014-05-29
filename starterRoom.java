@@ -27,5 +27,16 @@ public class starterRoom extends Room
     public void specificContent()
     {
         getDungeon().addObject(new Player(), curX + 25, curY + 30);
+        
+    }
+    
+    /**
+     * set the minimum of following Rooms to 2 so it will not stop at the starterRoom
+     */
+    @Override
+    public void setDoorCount()
+    {
+        doorCount = 0;
+        doorMinimum = 2;
     }
 }
