@@ -10,9 +10,9 @@ public class Player extends Tile
     public Player(){
         viewingRange = 800;  //TODO: make the Range dependent of the size of the tiles
         speed=1;
-        tileImageVisible = new GreenfootImage("player.png"); // choose image
-        tileImageVisibleDefault = true; //players are visible by default
-        tileHeightmap[1] = true; //the player is situated at height 1 and is solid
+        imageVisible = new GreenfootImage("player.png"); // choose image
+        imageVisibleDefault = true; //players are visible by default
+        heightMap[1] = true; //the player is situated at height 1 and is solid
     }
 
     //make stuff visible which should be visible

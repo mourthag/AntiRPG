@@ -9,9 +9,9 @@ import java.util.List;
 public class Tile extends hackedActor
 {
     //Tile's images
-    GreenfootImage tileImageVisible;
-    GreenfootImage tileImageInvisible;
-    boolean tileImageVisibleDefault; //choose whether tile is usually visible to player
+    GreenfootImage imageVisible;
+    GreenfootImage imageInvisible;
+    boolean imageVisibleDefault; //choose whether tile is usually visible to player
     //Tile's location and orientation
     boolean accXYRInit;
     float accX;
@@ -20,23 +20,27 @@ public class Tile extends hackedActor
 
     float speed; //speed in pixels/act, automatically initialized to 0
 
-    boolean[] tileHeightmap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
-    int tileHeight; //height
+    //Tile's geometry
+    static int height; //height
+    static boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
+    static boolean[][] colMap;
 
     public Tile()
     {
         //set up Tile's images
-        tileImageVisible = new GreenfootImage("none.png");
-        tileImageInvisible = new GreenfootImage("obfuscated.png");
-        tileImageVisibleDefault = false;
+        imageVisible = new GreenfootImage("none.png");
+        imageInvisible = new GreenfootImage("obfuscated.png");
+        imageVisibleDefault = false;
 
-        //set up Tile's heightmap
-        tileHeight = 2;
-        tileHeightmap = new boolean[tileHeight]; 
-        for(int h=0; h<tileHeight; h++) //default tile isn't solid at all
+        //set up Tile's height map
+        height = 2;
+        heightMap = new boolean[height]; 
+        for(int h=0; h<height; h++) //default tile isn't solid at all
         {
-            tileHeightmap[h]=false;
+            heightMap[h]=false;
         }
+
+        //set up Tile's collision map
 
         //set up Tile's location and orientation
         accXYRInit=false;
@@ -46,12 +50,12 @@ public class Tile extends hackedActor
      * Copy constructor
      */
     public Tile(Tile another){
-        this.tileImageVisible = another.tileImageVisible;
-        this.tileImageInvisible = another.tileImageInvisible;
-        this.tileImageVisibleDefault = another.tileImageVisibleDefault;
+        this.imageVisible = another.imageVisible;
+        this.imageInvisible = another.imageInvisible;
+        this.imageVisibleDefault = another.imageVisibleDefault;
 
-        this.tileHeight = another.tileHeight;
-        this.tileHeightmap = another.tileHeightmap;
+        this.height = another.height;
+        this.heightMap = another.heightMap;
     }
 
     //run when placing the object in the world
@@ -59,14 +63,14 @@ public class Tile extends hackedActor
     protected void addedToWorld(World world)
     {
         //scale Tile's images to tile size of the world
-        tileImageInvisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
-        tileImageVisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        imageInvisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
+        imageVisible.scale(getDungeon().tileWidth, getDungeon().tileHeight);
 
         //set default image
-        if(tileImageVisibleDefault){
-            setImage(tileImageVisible);
+        if(imageVisibleDefault){
+            setImage(imageVisible);
         } else {
-            setImage(tileImageInvisible);
+            setImage(imageInvisible);
         }
 
         //initialize accurate location and orientation storage
@@ -75,6 +79,10 @@ public class Tile extends hackedActor
         } else{
             accXYRUpdate();
         }
+    }
+
+    public void setUpImages(){
+        //Working here right now
     }
 
     public void accXYRInit(float x, float y, float r){
@@ -98,9 +106,9 @@ public class Tile extends hackedActor
     {
         //sets visibility to value visible
         if(visible){
-            setImage(tileImageVisible);
+            setImage(imageVisible);
         } else {
-            setImage(tileImageInvisible);
+            setImage(imageInvisible);
         }
     }
 
@@ -124,9 +132,9 @@ public class Tile extends hackedActor
         List<Tile> tilesVisible = getIntersectingObjects(Tile.class); //visually intersecting tiles
         for(Tile otherTile : tilesVisible)
         {
-            for(int i=0; i < tileHeight; i++)
+            for(int i=0; i < height; i++)
             {
-                if(otherTile.tileHeightmap[i] && tileHeightmap[i]) //logically intersecting?
+                if(otherTile.heightMap[i] && heightMap[i]) //logically intersecting?
                 {
                     return(true);
                 }
@@ -143,7 +151,7 @@ public class Tile extends hackedActor
     public void act() 
     {
         // go to default state each act (before player act)
-        setVisibility(tileImageVisibleDefault);
+        setVisibility(imageVisibleDefault);
         // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
         subSpecific();
     }
