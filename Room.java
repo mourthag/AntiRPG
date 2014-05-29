@@ -11,6 +11,7 @@ public class Room extends metaTile
     int tileWidth = getDungeon().tileWidth;
     int tileHeight = getDungeon().tileHeight;
     int doorCount;                                   //number of Exits this room will have
+    int doorMinimum;                             // Minimum number of Doors
     boolean[] blockedWalls;                         //the blocked Walls of this room
 
     int[] doorCoordinates; //int array for the Coordinates of the Doors
@@ -58,6 +59,8 @@ public class Room extends metaTile
         specificContent();
 
         blockedWalls =  blockedWalls();
+        
+        setDoorCount();
 
         if(doorCount == 0)     //if the doorCount hasnt been set already
         {
@@ -68,6 +71,7 @@ public class Room extends metaTile
             }
             doorCount = Greenfoot.getRandomNumber(2*limit);
         }
+        if(doorCount < doorMinimum)doorCount = doorMinimum;
 
         doorCoordinates = new int[doorCount * 2]; //int array for the Coordinates of the Doors
         doorDirections = new int[doorCount];     //int array for the direction of each door             
@@ -127,7 +131,7 @@ public class Room extends metaTile
                 if(doorDirections[i] == 1)
                 {
                     doorCoordinates[2*i] = getOtherX();
-                    doorCoordinates[2*i + 1] = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 1) * tileHeight;
+                    doorCoordinates[2*i + 1] = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
 
                     nextDoor[2*i] = doorCoordinates[2*i] + tileWidth;
                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
@@ -135,7 +139,7 @@ public class Room extends metaTile
                 }
                 else if(doorDirections[i] == 2)
                 {
-                    doorCoordinates[2*i] = curY + tileWidth + Greenfoot.getRandomNumber(curWidth - 1) * tileWidth;
+                    doorCoordinates[2*i] = curY + tileWidth + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
                     doorCoordinates[2*i + 1] = getOtherY();
 
                     nextDoor[2*i] = doorCoordinates[2*i];
@@ -156,11 +160,11 @@ public class Room extends metaTile
 
                 for(Tile currWall:wallsToRemove)
                 {
-                    if(currWall.doorsInRange())tooCloseDoor = true;
+                    if(currWall.doorsInRange() || currWall.getClass() == Door.class) tooCloseDoor = true;
                     else
                     {
                         remove(currWall);
-                       add(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1],0);
+                        add(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1],0);
                     }
                 }
 
@@ -235,35 +239,55 @@ public class Room extends metaTile
             nextY = nextY - nextHeight/2 * tileHeight; //+ getDungeon().getOffset();
         }
 
+        bossRoom nextBossRoom = new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance);
+        standardRoom nextStandardRoom = new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance);
+
         if(!getDungeon().bossRoomSpawned)
         {
             if(Greenfoot.getRandomNumber(100) <= getDungeon().bossRoomChance)
             {
-                getDungeon().addObject(new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+                getDungeon().addObject(nextBossRoom, nextX, nextY);
                 getDungeon().bossRoomSpawned = true;
+                
             }
             else
             {
-                getDungeon().addObject(new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+                getDungeon().addObject(nextStandardRoom, nextX, nextY);
             }
         }
         else
         {
-            getDungeon().addObject(new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance), nextX, nextY);
+            getDungeon().addObject(nextStandardRoom, nextX, nextY);
         }
 
     }
-
+    
+    /**
+     * Returns the X Value of the right side
+     */
     public int getOtherX()
     {
 
         return curX + (curWidth - 1)*tileWidth;
     }
 
+    /**
+     * Returns the Y Value of the bottom side
+     */
     public int getOtherY()
     {
 
         return curY + (curHeight - 1)*tileHeight;
+    }
+
+    /**
+     * Sets the doorCount and minimum doorCount
+     * Supposed to be overwridden by subclasses
+     */
+    public void setDoorCount()
+    {
+        doorCount = 0;
+        doorMinimum = 0;
     }
 }
 
