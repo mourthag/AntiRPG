@@ -18,6 +18,9 @@ public class Tile extends hackedActor
     float accY;
     float accR;
 
+    //The parrent MetaTile whose member this Tile is
+    metaTile parent;
+
     float speed; //speed in pixels/act, automatically initialized to 0
 
     //Tile's geometry
@@ -141,6 +144,18 @@ public class Tile extends hackedActor
             }
         }
         return(false);
+    }
+
+    /**
+     * Returns whether another Door is already in the predefined range
+     */
+    public boolean doorsInRange()
+    {
+        if(getObjectsInRange(getDungeon().blockedDoorRange, Door.class).isEmpty())
+        {
+            return false;
+        }
+        return true;
     }
 
     void subSpecific()

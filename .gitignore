@@ -1,4 +1,5 @@
 doc
 *.ctxt
 *.class
+*.bak
 README.TXT

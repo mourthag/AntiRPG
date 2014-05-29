@@ -6,6 +6,7 @@ import java.util.List;
  */
 public class Wall extends Tile
 {
+
     public Wall() 
     {
         imageVisible = new GreenfootImage("brick.jpg"); // choose image
@@ -13,12 +14,21 @@ public class Wall extends Tile
         heightMap[1] = true; //... and 1.
     }
 
-    public boolean doorsInRange()
+    /**
+     * 
+     */
+    public int roomsInRange()
     {
-        if(getObjectsInRange(getDungeon().blockedDoorRange, Door.class).isEmpty())
+        int roomsInRange = 0;
+        int distance;
+        for(distance = 0; roomsInRange == 0; distance++)
         {
-            return false;
+            List<Room> allRooms = getObjectsInRange(distance, Room.class);
+            for(Room curRoom: allRooms)
+            {
+                if(curRoom != parent) roomsInRange++;              //check all walls and add those who arent applied to the Parent of this Wall
+            }
         }
-            return true;
+        return distance;
     }
 }

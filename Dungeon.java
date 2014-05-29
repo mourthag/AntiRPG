@@ -24,7 +24,6 @@ public class Dungeon extends World
     
     public int roomDistance = 7 * tileHeight;       //the distance between two rooms
     public int blockedDoorRange = 5 * tileWidth;    //the distance  that doors have to have to each other
-    public int offset = 5;                          //possible offset for the distance of the Room
     
     public boolean bossRoomSpawned = false;
     public int bossRoomChance = 1;                 //Chance in percent of spawning a bossRoom
@@ -49,9 +48,9 @@ public class Dungeon extends World
         //tmp playground
         //addObject(new Wall(), 45,45);
         //addObject(new Tile(), 70,45);
-        addObject(new metaTile(), 150, 150);
+        //addObject(new metaTile(), 150, 150);
 
-        //startUpRoom( 100,100,10,10);
+        startUpRoom( 100,100,10,10);
         
         //addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
     }
@@ -65,10 +64,5 @@ public class Dungeon extends World
 
         addObject(new starterRoom( x, y, width, height), x, y);
 
-    }
-    
-    public int getOffset()
-    {
-        return Greenfoot.getRandomNumber(offset * 2) - offset;
     }
 }
