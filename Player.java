@@ -8,13 +8,17 @@ public class Player extends Tile
 {
     private boolean space;
 
+
     public Player(){
+        health=100;
+        damage=5;
         space=false;
         speed=1;
         imageLoc = "player.png"; // choose image
         visibleAlways = true; //players are visible by default
         heightMap[1] = true; //the player is situated at height 1 and is solid
     }
+
 
     /**
      * Move if the right keys are pressed

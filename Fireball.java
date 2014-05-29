@@ -15,6 +15,7 @@ public abstract class Fireball extends Tile
         heightMap[1] = true;
         speed = 3;
         direction = dir;
+        damage=50;
     }
 
     /**

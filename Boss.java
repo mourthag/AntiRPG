@@ -1,19 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class m3 here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * Very advanced monster which manages to blindly scramble in the direction of the player AND shoot fireballs both at the same time (unbelievable, isn't it?)
  */
 public class Boss extends Monster
 {
-    /**
-     * Act - do whatever the m3 wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act() 
-    {
-        // Add your action code here.
-    }    
+    public Boss(){
+        health=300;
+        damage=5;
+    }
 }

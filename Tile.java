@@ -24,6 +24,10 @@ public class Tile extends hackedActor{
     //speed in pixels/act, automatically initialized to 0
     float speed;
 
+    public int health;
+
+    public int damage;
+
     //Tile's geometry
     static int height; //height
     boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
@@ -33,6 +37,10 @@ public class Tile extends hackedActor{
         //set up Tile's images
         imageLoc = "none.png";
         visibleAlways = false;
+        
+        health=100; //just some default value
+        
+        damage=0; //just some default value
 
         //set up Tile's height map
         height = 2; // Don't change in subclasses or the system will go bananas (I guarantee for nothing)
@@ -241,9 +249,9 @@ public class Tile extends hackedActor{
 
     /**
      * Called when that Tile was hit by another Tile
-     * If something should happen this is overwritten
      */
     void gotHit(Tile tile){
+        health -= tile.damage;
     }
 
     /**
@@ -257,6 +265,11 @@ public class Tile extends hackedActor{
         if(getDungeon() != null){
             // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
             subSpecific();
+        }
+        
+        //DIE!1!!
+        if(health < 1){
+            getDungeon().removeObject(this);
         }
     }
 }
