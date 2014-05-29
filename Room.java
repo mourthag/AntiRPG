@@ -159,8 +159,8 @@ public class Room extends metaTile
                     if(currWall.doorsInRange())tooCloseDoor = true;
                     else
                     {
-                        getDungeon().removeObjects(wallsToRemove);
-                        getDungeon().addObject(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1]);
+                        remove(currWall);
+                       add(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1],0);
                     }
                 }
 
