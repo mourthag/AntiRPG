@@ -221,7 +221,7 @@ public class Room extends metaTile
 
     /**
      * Creates a new Room at the given Door.
-     * It´s possible that a bossRoom will spawn. In most cases it will be a standardRoom
+     * It's possible that a bossRoom will spawn. In most cases it will be a standardRoom
      */
     public void randomRoom(int number)
     {
