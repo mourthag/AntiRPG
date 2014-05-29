@@ -119,6 +119,12 @@ public class metaTile extends hackedActor
         }
     }
 
+    public void remove(List<Tile> tilesToRemove){
+        for(Tile tileToRemove :  tilesToRemove){
+            remove(tileToRemove);
+        }
+    }
+
     /**
      * Delete (remove from world and destroy) all Tile's belonging to that metaTile
      */
