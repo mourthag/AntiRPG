@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * Tiles are our kind of Actors, with some additional features.
  */
-public class Tile extends hackedActor
-{
+public class Tile extends hackedActor{
     //Tile's image
     String imageLoc; //where to get the image file
     private GreenfootImage image; //the GreenfootImage
@@ -30,8 +29,7 @@ public class Tile extends hackedActor
     boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
     boolean[][] colMap; // collision map
 
-    public Tile()
-    {
+    public Tile(){
         //set up Tile's images
         imageLoc = "none.png";
         visibleAlways = false;
@@ -67,8 +65,7 @@ public class Tile extends hackedActor
      * Run when placing the object in the world
      */
     @Override
-    protected void addedToWorld(World world)
-    {
+    protected void addedToWorld(World world){
         setUpImage();
 
         setUpColMap();
@@ -153,16 +150,14 @@ public class Tile extends hackedActor
      * Set Greenfoot location/rotation values to our internal ones.
      * (not rotation right now, probably never, Greenfoot just messes up when we use it)
      */
-    public void accXYRUpdate()
-    {
+    public void accXYRUpdate(){
         setLocation(Math.round(accX), Math.round(accY));
         //ignoring rotation, Greenfoot just messes up anyway
         //setRotation(Math.round(accR));
     }
 
     // kind of like smoothMover, but without the unnecessary features
-    public void move(float x, float y)
-    {
+    public void move(float x, float y){
         accX += x;
         accY += y;
         accXYRUpdate();
@@ -171,11 +166,14 @@ public class Tile extends hackedActor
         }
     }
 
+    public void move(float direction){
+        move((float)Math.cos((direction/360) * 2 * Math.PI)*speed, (float)Math.sin((direction/360) * 2 * Math.PI)*speed);
+    }
+
     public void rotate(float r){
         accR += r;
         setUpImage();
         setUpColMap();
-        accXYRUpdate();
         if(colliding()){ // just reverse the rotation before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
             rotate(-r);
         }
@@ -206,8 +204,7 @@ public class Tile extends hackedActor
         return(false);
     }
 
-    public boolean colliding()
-    {
+    public boolean colliding(){
         List<Tile> tilesVisible = getIntersectingObjects(Tile.class); //visually intersecting tiles
         for(Tile otherTile : tilesVisible)
         {
@@ -216,6 +213,7 @@ public class Tile extends hackedActor
                 if(otherTile.heightMap[i] && heightMap[i]) //logically intersecting?
                 {
                     if(colMapIntersect(otherTile.colMap, otherTile.getX(), otherTile.getY())){// collision map intersecting?
+                        Hit(otherTile);
                         return(true);
                     }
                 }
@@ -227,8 +225,7 @@ public class Tile extends hackedActor
     /**
      * Returns whether another Door is already in the predefined range
      */
-    public boolean doorsInRange()
-    {
+    public boolean doorsInRange(){
         if(getObjectsInRange(getDungeon().blockedDoorRange, Door.class).isEmpty())
         {
             return false;
@@ -236,14 +233,30 @@ public class Tile extends hackedActor
         return true;
     }
 
-    void subSpecific()
-    {
-        //for subclasses to overwrite
+    /**
+     * Method which subclasses should overwrite instead of act
+     */
+    void subSpecific(){
     }
 
-    public void act() 
-    {
-        // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
-        subSpecific();
+    /**
+     * Called when that Tile was hit by another Tile
+     * If something should happen this is overwritten
+     */
+    void gotHit(Tile tile){
+    }
+
+    /**
+     * Called when that Tile hits another Tile
+     * If something should happen this is overwritten
+     */
+    void Hit(Tile tile){
+    }
+
+    public void act(){
+        if(getDungeon() != null){
+            // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
+            subSpecific();
+        }
     }
 }
