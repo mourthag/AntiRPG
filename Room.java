@@ -20,6 +20,8 @@ public class Room extends metaTile
 
     int[] nextDoor;          //Coords for the Entrance of these rooms
 
+    boolean colliding = false; //used for collisions of generated rooms
+
     //For handling them over to addedToWorld()
     int curX;           
     int curY;
@@ -59,7 +61,7 @@ public class Room extends metaTile
         specificContent();
 
         blockedWalls =  blockedWalls();
-        
+
         setDoorCount();
 
         if(doorCount == 0)     //if the doorCount hasnt been set already
@@ -107,76 +109,82 @@ public class Room extends metaTile
     {
         for(int i = 0; i<doorCount; i++)
         {
-            boolean tooCloseDoor = false;
-            do
-            {
-                tooCloseDoor = false;
+            setDoor(i);
 
-                //randomly picks a Wall and redos if its blocked
-                int random;
-                do random = Greenfoot.getRandomNumber(2) + 1;while(blockedWalls[random]);
-
-                doorDirections[i] = random;
-
-                //set the coordinates for the Door and the following entrance
-                //                 if(doorDirections[i] == 0)
-                //                 {
-                //                     doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
-                //                     doorCoordinates[2*i + 1] = outerCoordinates[1];
-                // 
-                //                     nextDoor[2*i] = doorCoordinates[2*i];
-                //                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1] - tileHeight;
-                // 
-                //                 }
-                if(doorDirections[i] == 1)
-                {
-                    doorCoordinates[2*i] = getOtherX();
-                    doorCoordinates[2*i + 1] = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
-
-                    nextDoor[2*i] = doorCoordinates[2*i] + tileWidth;
-                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
-
-                }
-                else if(doorDirections[i] == 2)
-                {
-                    doorCoordinates[2*i] = curY + tileWidth + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
-                    doorCoordinates[2*i + 1] = getOtherY();
-
-                    nextDoor[2*i] = doorCoordinates[2*i];
-                    nextDoor[2*i + 1] = doorCoordinates[2*i + 1] + tileHeight;
-
-                }
-                //                 else if(doorDirections[i] == 3)
-                //                 {
-                //                     doorCoordinates[2*i] = outerCoordinates[0];
-                //                     doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
-                // 
-                //                     nextDoor[2*i] = doorCoordinates[2*i] - tileWidth;
-                //                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
-                // 
-                //                 }
-
-                List<Tile> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[2*i], doorCoordinates[2*i + 1], Tile.class);
-
-                for(Tile currWall:wallsToRemove)
-                {
-                    if(currWall.doorsInRange() || currWall.getClass() == Door.class) tooCloseDoor = true;
-                    else
-                    {
-                        remove(currWall);
-                        add(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1],0);
-                    }
-                }
-
-            }while(tooCloseDoor);
-
-            /*
-             * Rufe die Funktion am besten von Hand auf... i ist die Numer der T체r, an der ein neuer Raum erzeugt werden soll
-             * Momentan l채uft das ganze noch per Hand. Wenn ich die Abstandserkennung implementiert habe,dann rufe ich sie so auf
-             */
-            //randomRoom(i);
         }
 
+    }
+
+    public void setDoor(int i)
+    {
+        boolean tooCloseDoor = false;
+        do
+        {
+            tooCloseDoor = false;
+
+            //randomly picks a Wall and redos if its blocked
+            int random;
+            do random = Greenfoot.getRandomNumber(2) + 1;while(blockedWalls[random]);
+
+            doorDirections[i] = random;
+
+            //set the coordinates for the Door and the following entrance
+            //                 if(doorDirections[i] == 0)
+            //                 {
+            //                     doorCoordinates[2*i] = innerX + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
+            //                     doorCoordinates[2*i + 1] = outerCoordinates[1];
+            // 
+            //                     nextDoor[2*i] = doorCoordinates[2*i];
+            //                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1] - tileHeight;
+            // 
+            //                 }
+            if(doorDirections[i] == 1)
+            {
+                doorCoordinates[2*i] = getOtherX();
+                doorCoordinates[2*i + 1] = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+
+                nextDoor[2*i] = doorCoordinates[2*i] + tileWidth;
+                nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
+
+            }
+            else if(doorDirections[i] == 2)
+            {
+                doorCoordinates[2*i] = curY + tileWidth + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
+                doorCoordinates[2*i + 1] = getOtherY();
+
+                nextDoor[2*i] = doorCoordinates[2*i];
+                nextDoor[2*i + 1] = doorCoordinates[2*i + 1] + tileHeight;
+
+            }
+            //                 else if(doorDirections[i] == 3)
+            //                 {
+            //                     doorCoordinates[2*i] = outerCoordinates[0];
+            //                     doorCoordinates[2*i + 1] = innerY + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+            // 
+            //                     nextDoor[2*i] = doorCoordinates[2*i] - tileWidth;
+            //                     nextDoor[2*i + 1] = doorCoordinates[2*i + 1];
+            // 
+            //                 }
+
+            List<Tile> wallsToRemove = getDungeon().getObjectsAt(doorCoordinates[2*i], doorCoordinates[2*i + 1], Tile.class);
+
+            for(Tile currWall:wallsToRemove)
+            {
+                if(currWall.doorsInRange() || currWall.getClass() == Door.class) tooCloseDoor = true;
+                else
+                {
+                    remove(currWall);
+                    add(new Door(), doorCoordinates[2*i], doorCoordinates[2*i + 1],0);
+                }
+            }
+
+        }while(tooCloseDoor);
+
+        /*
+         * Rufe die Funktion am besten von Hand auf... i ist die Numer der T체r, an der ein neuer Raum erzeugt werden soll
+         * Momentan l채uft das ganze noch per Hand. Wenn ich die Abstandserkennung implementiert habe,dann rufe ich sie so auf
+         */
+        //randomRoom(i);
     }
 
     /**
@@ -213,7 +221,7 @@ public class Room extends metaTile
 
     /**
      * Creates a new Room at the given Door.
-     * It쨈s possible that a bossRoom will spawn. Normally it will be a standardRoom
+     * It큦 possible that a bossRoom will spawn. In most cases it will be a standardRoom
      */
     public void randomRoom(int number)
     {
@@ -239,7 +247,7 @@ public class Room extends metaTile
             nextY = nextY - nextHeight/2 * tileHeight; //+ getDungeon().getOffset();
         }
 
-        bossRoom nextBossRoom = new bossRoom(nextX, nextY, nextWidth, nextHeight,entrance);
+        bossRoom nextBossRoom = new bossRoom(nextX, nextY, 9, 9,entrance);
         standardRoom nextStandardRoom = new standardRoom(nextX, nextY, nextWidth, nextHeight,entrance);
 
         if(!getDungeon().bossRoomSpawned)
@@ -248,20 +256,37 @@ public class Room extends metaTile
             {
                 getDungeon().addObject(nextBossRoom, nextX, nextY);
                 getDungeon().bossRoomSpawned = true;
-                
+
+                if(nextBossRoom.colliding())
+                {
+                    colliding = true;
+                    getDungeon().removeObject(nextBossRoom);
+                }
             }
             else
             {
                 getDungeon().addObject(nextStandardRoom, nextX, nextY);
+                getDungeon().bossRoomChance++;
+                if(nextStandardRoom.colliding())
+                {
+                    colliding = true;
+                    getDungeon().removeObject(nextStandardRoom);
+                }
             }
         }
         else
         {
             getDungeon().addObject(nextStandardRoom, nextX, nextY);
+            getDungeon().bossRoomChance++;
+            if(nextStandardRoom.colliding())
+            {
+                colliding = true;
+                getDungeon().removeObject(nextStandardRoom);
+            }
         }
 
     }
-    
+
     /**
      * Returns the X Value of the right side
      */

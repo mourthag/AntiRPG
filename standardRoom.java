@@ -20,21 +20,23 @@ public class standardRoom extends Room
     }  
 
     /**
-     * Add some random Deco and monsters
+     * Add some(none) random Deco and monsters
      */
     @Override
     public void specificContent()
     {
-        getDungeon().addObject(new Player(), curX + 25, curY + 30);
+        int numberOfMonsters = Greenfoot.getRandomNumber(getDungeon().difficulty / 2);
+        
+        for(int i = 0; i < numberOfMonsters; i++)
+        {
+            int monX = curX + tileWidth + Greenfoot.getRandomNumber(curWidth - 2) * tileWidth;
+            int monY = curY + tileHeight + Greenfoot.getRandomNumber(curHeight - 2) * tileHeight;
+            int monType = Greenfoot.getRandomNumber(2);
+            if(monType == 0)
+            getDungeon().addObject(new Monster1(), monX, monY);
+            else
+            getDungeon().addObject(new Monster2(), monX, monY);
+        }
     }
 
-    /**
-     * set the minimum of following Rooms to 2 so it will not stop at the starterRoom
-     */
-    @Override
-    public void setDoorCount()
-    {
-        doorCount = 0;
-        doorMinimum = 2;
-    }
 }

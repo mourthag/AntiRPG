@@ -13,7 +13,7 @@ import java.lang.Math;
  */
 public class Dungeon extends World
 {
-    public int difficulty = 26;
+    public int difficulty = 10;
     
     public static final int frameWidth = Integer.valueOf(JOptionPane.showInputDialog("Width","1131"));      //tmp no control for invalid values
     public static final int frameHeight = Integer.valueOf(JOptionPane.showInputDialog("Height","725"));     //tmp no control for invalid values
