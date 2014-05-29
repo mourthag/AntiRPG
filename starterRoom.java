@@ -21,15 +21,19 @@ public class starterRoom extends Room
     } 
 
     /**
-     * Add a player and some random Deco
+     * Add a player and some (not so)random Deco
      */
     @Override
     public void specificContent()
     {
         getDungeon().addObject(new Player(), curX + 25, curY + 30);
-        
+
+        add(new Deco1(), curX + tileWidth, curY + tileHeight, 0);
+        add(new Deco1(), getOtherX() - tileWidth, curY + tileHeight, 0);
+        add(new Deco1(), curX + tileWidth, getOtherY() - tileHeight, 0);
+        add(new Deco1(), getOtherX() - tileWidth, getOtherY() - tileHeight, 0);
     }
-    
+
     /**
      * set the minimum of following Rooms to 2 so it will not stop at the starterRoom
      */
