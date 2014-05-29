@@ -119,10 +119,23 @@ public class metaTile extends hackedActor
         }
     }
 
+    /**
+     * Call remove(tile) for a whole list of Tiles
+     */
     public void remove(List<Tile> tilesToRemove){
         for(Tile tileToRemove :  tilesToRemove){
             remove(tileToRemove);
         }
+    }
+
+    /**
+     * Remove the metaTile and all of it's Tiles from the world
+     */
+    public void remove(){
+        for(Tile tile : tiles){
+            tile.getDungeon().removeObject(tile);
+        }
+        getDungeon().removeObject(this);
     }
 
     /**
