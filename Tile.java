@@ -92,7 +92,7 @@ public class Tile extends hackedActor
     /*
      * Sets up the Tile's collision map based on it's image
      */
-    public void setUpColMap(){
+    public void setUpColMap(GreenfootImage image){
         colMap = new boolean[image.getWidth()][image.getHeight()];
         if(!(image.getTransparency() == 0)){
             for(int i=0; i < image.getWidth(); i++){
@@ -101,8 +101,18 @@ public class Tile extends hackedActor
                 }
             }
         } else {
-            //everything = false, no collisions
+            for(int i=0; i < image.getWidth(); i++){
+                for(int j=0; j < image.getHeight(); j++){
+                    colMap[i][j] = false;
+                }
+            }
         }
+    }
+
+    public void setUpColMap(){
+        GreenfootImage rotatedImage = new GreenfootImage(image);
+        rotatedImage.rotate(getRotation());
+        setUpColMap(rotatedImage);
     }
 
     /*
@@ -145,10 +155,20 @@ public class Tile extends hackedActor
         accX += x;
         accY += y;
         accXYRUpdate();
-        if(colliding()) // just reverse the move before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
-        {
+        if(colliding()){ // just reverse the move before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
             accX -= x;
             accY -= y;
+            accXYRUpdate();
+        }
+    }
+
+    public void rotate(float r){
+        accR += r;
+        setUpColMap();
+        accXYRUpdate();
+        if(colliding()){
+            accR -= r;
+            setUpColMap();
             accXYRUpdate();
         }
     }

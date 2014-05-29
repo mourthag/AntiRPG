@@ -56,7 +56,6 @@ public class metaTile extends hackedActor
      */
     public void add(Tile tileToAdd){
         if(tileToAdd.accXYRInit){
-            tileToAdd.parent = this;
             add(tileToAdd, tileToAdd.accX, tileToAdd.accY, tileToAdd.accR);
         }
     }
@@ -130,10 +129,29 @@ public class metaTile extends hackedActor
         }
     }
 
-    public void move(float x, float y){
+    public boolean colliding(){
+        for(Tile tile : tiles){
+            if(tile.colliding()) return(true);
+        }
+        return(false);
+    }
+
+    /**
+     * Moves all Tiles of the metaTile.
+     * If you set colCheck to false, individual moves will still fail if they would lead to collisions, so you would probably not get the result you expected
+     */
+    public void move(float x, float y, boolean colCheck){
         for(Tile tile : tiles){
             tile.move(x, y);
         }
+        if(colCheck && colliding()) move(-x, -y, false);
+    }
+
+    /**
+     * move(float x, float y, boolean colCheck) method with colCheck set to true.
+     */
+    public void move(float x, float y){
+        move(x, y, true);
     }
 
     public void subSpecific()
