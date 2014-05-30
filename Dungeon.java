@@ -43,10 +43,6 @@ public class Dungeon extends World
         background.setColor(Color.BLACK);
         background.fill();
 
-        //set act order
-        //player needs to be last because of the way we process visbility
-        setActOrder(Tile.class, Player.class);
-
         //tmp playground
         //addObject(new Wall(), 45,45);
         //addObject(new Tile(), 70,45);

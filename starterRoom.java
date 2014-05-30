@@ -26,8 +26,10 @@ public class starterRoom extends Room
     @Override
     public void specificContent()
     {
-        getDungeon().addObject(new Player(), curX + 25, curY + 30);
-
+        Player p = new Player();
+        getDungeon().addObject(p, curX + 25, curY + 30);
+        
+        //getDungeon().addObject(new healthBar(p),0,0);
         add(new Deco1(), curX + tileWidth, curY + tileHeight, 0);
         add(new Deco1(), getOtherX() - tileWidth, curY + tileHeight, 0);
         add(new Deco1(), curX + tileWidth, getOtherY() - tileHeight, 0);
