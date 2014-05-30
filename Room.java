@@ -8,7 +8,6 @@ import java.util.Arrays;
  */
 public class Room extends metaTile
 {
-    boolean followingRooms = false;
     int tileWidth = getDungeon().tileWidth;
     int tileHeight = getDungeon().tileHeight;
     int doorCount;                                   //number of Exits this room will have
@@ -99,13 +98,6 @@ public class Room extends metaTile
      */
     public void act() 
     {
-        if(!followingRooms)
-        {
-            for(int l = 0; l<doorCount;l++)
-                randomRoom(l);
-
-            followingRooms = true;
-        }
 
     }   
 
