@@ -43,6 +43,9 @@ public class Dungeon extends World
         background.setColor(Color.BLACK);
         background.fill();
 
+        //player on top
+        setPaintOrder(Player.class, Tile.class);
+
         //tmp playground
         //addObject(new Wall(), 45,45);
         //addObject(new Tile(), 70,45);
@@ -59,7 +62,7 @@ public class Dungeon extends World
         {
         }
         
-        //addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
+        addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
     }
 
     /*
