@@ -17,14 +17,14 @@ public class Monster extends Tile
     public void shoot(){
         List<Tile> players = getDungeon().getObjects(Player.class);
         for(Tile p : players){
-            shootFireball(directionOf(p));
+            if(getObjectsInRange(100, Player.class).contains(p)) shootFireball(directionOf(p));
         }
     }
 
     public void follow(){
         List<Tile> players = getDungeon().getObjects(Player.class);
         for(Tile p : players){
-            move(directionOf(p));
+            if(getObjectsInRange(100, Player.class).contains(p)) move(directionOf(p));
         }
     }
 }
