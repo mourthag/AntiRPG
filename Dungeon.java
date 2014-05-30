@@ -48,9 +48,9 @@ public class Dungeon extends World
         //addObject(new Tile(), 70,45);
         //addObject(new metaTile(), 150, 150);
 
-        startUpRoom( 100,100,10,10);
+        //startUpRoom( 100,100,10,10);
 
-        /*
+        
         //errorHandling
         try{
             readTXT();  //Read The File
@@ -58,7 +58,7 @@ public class Dungeon extends World
         catch(IOException e)
         {
         }
-        */
+        
         //addObject(new startScreen(), Math.round(frameWidth / 2), Math.round(frameHeight / 2));
     }
 
