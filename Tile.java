@@ -28,6 +28,8 @@ public class Tile extends hackedActor{
 
     public int damage;
 
+    boolean space;
+
     //Tile's geometry
     static int height; //height
     boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
@@ -37,9 +39,9 @@ public class Tile extends hackedActor{
         //set up Tile's images
         imageLoc = "none.png";
         visibleAlways = false;
-        
+
         health=100; //just some default value
-        
+
         damage=0; //just some default value
 
         //set up Tile's height map
@@ -261,12 +263,69 @@ public class Tile extends hackedActor{
     void Hit(Tile tile){
     }
 
+    /**
+     * Move if the right keys are pressed
+     */
+    public void movement(){
+        //move, and pay attention not to be faster diagonally
+        int x=0;
+        int y=0;
+
+        if(Greenfoot.isKeyDown("right")) x++;
+        if(Greenfoot.isKeyDown("left")) x--;
+        if(Greenfoot.isKeyDown("down")) y++;
+        if(Greenfoot.isKeyDown("up")) y--;
+        if((x == 0) && (y == 0)) return; // nothing to do, spare us the call to move()
+
+        float factor=1;
+        if(x != 0 && y != 0) factor=(float)0.7071; // factor = squareRoot(0.5)
+        move(x*speed*factor, y*speed*factor);
+    }
+
+    /**
+     * Shoot a fireball if space is pressed, and don't shoot another one until space is released and pressed again
+     */
+    public void attack(){
+        if(Greenfoot.isKeyDown("space") && !space){
+            space=true;
+            shootFireball(accR-90);
+        } else if(!Greenfoot.isKeyDown("space") && space){
+            space=false;
+        }
+    }
+
+    /**
+     * Shoot a fireball in viewing direction
+     */
+    public void shootFireball(float dir){
+        //Fireball flies in direction accR-90 because the player internal direction isn't it's shooting direction
+        FRed fball = new FRed(dir);
+        getDungeon().addObject(fball, (int)(accX+(float)Math.cos(((dir)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5), (int)(accY+(float)Math.sin(((dir)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5));
+        if(fball.colliding()) fball.getDungeon().removeObject(fball);
+    }
+
+    /**
+     * Turn if the right keys are pressed
+     */
+    public void turn(){
+        if(Greenfoot.isKeyDown("v")) rotate(-2);
+        if(Greenfoot.isKeyDown("n")) rotate(2);
+    }
+
+    public float directionOf(Tile tile){
+        float dx = tile.accX-accX;
+        float dy = tile.accY-accY;
+        float dir = (float)(( - Math.atan2(dx, dy ) / (2*Math.PI)) * 360 + 90);
+        //if(accY < tile.accY) dir = -dir;
+        return(dir);
+    }
+
     public void act(){
         if(getDungeon() != null){
             // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
             subSpecific();
         }
-        
+
         //DIE!1!!
         if(health < 1){
             getDungeon().removeObject(this);

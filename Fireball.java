@@ -10,6 +10,7 @@ public abstract class Fireball extends Tile
 {
     float direction;
     boolean disappear;
+    int age;
 
     public Fireball(float dir){
         heightMap[1] = true;
@@ -29,6 +30,8 @@ public abstract class Fireball extends Tile
     }
 
     public void subSpecific(){
+        age++;
+        if(age > 30) disappear=true;
         rotate(10);
         move(direction);
         if(disappear){

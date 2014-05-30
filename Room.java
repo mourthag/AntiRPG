@@ -99,13 +99,13 @@ public class Room extends metaTile
      */
     public void act() 
     {
-         if(!followingRooms)
-{
-for(int l = 0; l<doorCount;l++)
-randomRoom(l);
+        if(!followingRooms)
+        {
+            for(int l = 0; l<doorCount;l++)
+                randomRoom(l);
 
-followingRooms = true;
-}
+            followingRooms = true;
+        }
 
     }   
 
@@ -191,12 +191,11 @@ followingRooms = true;
                 }
             }
 
-
-        /*
-         * Rufe die Funktion am besten von Hand auf... i ist die Numer der Tür, an der ein neuer Raum erzeugt werden soll
-         * Momentan läuft das ganze noch per Hand. Wenn ich die Abstandserkennung implementiert habe,dann rufe ich sie so auf
-         */
-        //randomRoom(i);
+            /*
+             * Rufe die Funktion am besten von Hand auf... i ist die Numer der Tür, an der ein neuer Raum erzeugt werden soll
+             * Momentan läuft das ganze noch per Hand. Wenn ich die Abstandserkennung implementiert habe,dann rufe ich sie so auf
+             */
+            //randomRoom(i);
         }while(tooCloseDoor || colliding);
 
         /*
