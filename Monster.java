@@ -14,14 +14,17 @@ public class Monster extends Tile
         heightMap[1] = true; //monsters are situated at height 1 and are solid
     }
 
-    public void subSpecific(){
-        counter++;
-        if(counter>100) counter=0;
-        if(counter==10){
-            List<Tile> players = getDungeon().getObjects(Player.class);
-            for(Tile p : players){
-                shootFireball(directionOf(p));
-            }
+    public void shoot(){
+        List<Tile> players = getDungeon().getObjects(Player.class);
+        for(Tile p : players){
+            shootFireball(directionOf(p));
+        }
+    }
+
+    public void follow(){
+        List<Tile> players = getDungeon().getObjects(Player.class);
+        for(Tile p : players){
+            move(directionOf(p));
         }
     }
 }

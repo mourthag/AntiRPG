@@ -8,5 +8,13 @@ public class Boss extends Monster
     public Boss(){
         health=300;
         damage=5;
+        speed=1;
+    }
+
+    public void subSpecific(){
+        counter++;
+        if(counter>100) counter=0;
+        if(counter==10) shoot();
+        follow();
     }
 }

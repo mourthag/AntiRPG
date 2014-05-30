@@ -5,8 +5,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Monster2 extends Monster
 {
-   public Monster2(){
+    public Monster2(){
         health=100;
         damage=5;
+        speed=(float)0.5;
     }   
+
+    public void subSpecific(){
+        counter++;
+        if(counter>100) counter=0;
+        follow();
+    }
 }
