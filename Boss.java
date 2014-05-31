@@ -9,12 +9,17 @@ public class Boss extends Monster
         health=300;
         damage=5;
         speed=1;
+        angularSpeed = 5;
     }
 
-    public void subSpecific(){
+    public void attack(){
+        drop(new FPurple(accR-90));
+    }
+
+    public void subSubSpecific(){
         counter++;
         if(counter>100) counter=0;
-        if(counter==10) shoot();
-        follow();
+        if(counter==10) shootPlayer();
+        followPlayer();
     }
 }

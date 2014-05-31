@@ -1,19 +1,25 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Stationary monster which throws fireballs at the player
+ * Slow monster which throws fireballs at the player
  */
 public class Monster1 extends Monster
 {
-    //Fireball throwing
     public Monster1(){
         health=100;
         damage=50;
+        angularSpeed = 2;
+        speed = (float)0.05;
     }
 
-    public void subSpecific(){
+    public void attack(){
+        drop(new FBlue(accR-90));
+    }
+
+    public void subSubSpecific(){
         counter++;
         if(counter>100) counter=0;
-        if(counter==10) shoot();
+        if(counter==10) shootPlayer();
+        followPlayer();
     }
 }

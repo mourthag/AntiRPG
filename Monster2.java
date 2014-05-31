@@ -9,11 +9,12 @@ public class Monster2 extends Monster
         health=100;
         damage=5;
         speed=(float)0.5;
+        angularSpeed=6;
     }   
 
-    public void subSpecific(){
+    public void subSubSpecific(){
         counter++;
         if(counter>100) counter=0;
-        follow();
+        followPlayer();
     }
 }

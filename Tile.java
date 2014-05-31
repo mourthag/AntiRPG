@@ -23,6 +23,7 @@ public class Tile extends hackedActor{
 
     //speed in pixels/act, automatically initialized to 0
     float speed;
+    float angularSpeed;
 
     public int health;
 
@@ -208,7 +209,16 @@ public class Tile extends hackedActor{
     public void move(float direction){
         move(direction, true, false);
     }
-    
+
+    /**
+     * Takes any angle and outputs an equivalent angle in the range -180;180
+     */
+    public float normAngle(float ang){
+        while(ang > 180) ang -= 360;
+        while(ang < -180) ang += 360;
+        return(ang);
+    }
+
     /**
      * Rotates the Tile by r.
      * This works around Greenfoot in several ways, Greenfoot is never notified of the rotation.
@@ -218,9 +228,10 @@ public class Tile extends hackedActor{
      */
     public void rotate(float r){
         accR += r;
+        accR = normAngle(accR);
         setUpImage();
         setUpColMap();
-        if(colliding()){ // just reverse the rotation before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
+        if(colliding()){
             rotate(-r);
         }
     }
@@ -266,6 +277,7 @@ public class Tile extends hackedActor{
                 {
                     if(colMapIntersect(otherTile.colMap, otherTile.getX(), otherTile.getY())){// collision map intersecting?
                         Hit(otherTile);
+                        otherTile.gotHit(this);
                         return(true);
                     }
                 }
@@ -308,7 +320,7 @@ public class Tile extends hackedActor{
     /**
      * Move if the right keys are pressed
      */
-    public void movement(){
+    public void PlayerMovement(){
         //move, and pay attention not to be faster diagonally
         int x=0;
         int y=0;
@@ -327,52 +339,70 @@ public class Tile extends hackedActor{
     /**
      * Shoot a fireball if space is pressed, and don't shoot another one until space is released and pressed again
      */
-    public void attack(){
+    public void PlayerAttack(){
         if(Greenfoot.isKeyDown("space") && !space){
             space=true;
-            shootFireball(accR-90);
+            drop(new FRed(accR-90));
         } else if(!Greenfoot.isKeyDown("space") && space){
             space=false;
         }
     }
 
     /**
-     * Shoot a fireball in viewing direction
+     * Drop tile in front of this.
      */
-    public void shootFireball(float dir){
-        //Fireball flies in direction accR-90 because the player internal direction isn't it's shooting direction
-        FRed fball = new FRed(dir);
-        getDungeon().addObject(fball, (int)(accX+(float)Math.cos(((dir)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5), (int)(accY+(float)Math.sin(((dir)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5));
-        if(fball.colliding()) fball.getDungeon().removeObject(fball);
+    public void drop(Tile tile){
+        //in front of == accR - 90
+        getDungeon().addObject(tile, (int)(accX+(float)Math.cos(((accR-90)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5), (int)(accY+(float)Math.sin(((accR-90)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5));
+        if(tile.colliding()) getDungeon().removeObject(tile);
     }
 
     /**
      * Turn if the right keys are pressed
      */
-    public void turn(){
-        if(Greenfoot.isKeyDown("v")) rotate(-2);
-        if(Greenfoot.isKeyDown("n")) rotate(2);
+    public void PlayerTurn(){
+        if(Greenfoot.isKeyDown("v")) turn(false);
+        if(Greenfoot.isKeyDown("n")) turn(true);
     }
 
     /**
-     * Get the direction of an other Tile from the viewpoint of this Tile
+     * Turn by angularSpeed
+     */
+    public void turn(boolean dir){
+        rotate(dir ? angularSpeed : -angularSpeed);
+    }
+
+    /**
+     * Turn towards Tile tile
+     */
+    public void turnTowards(Tile tile){
+        if(normAngle(accR + 90 - directionOf(tile)) > 0){
+            turn(true);
+        }else{
+            turn(false);
+        }
+    }
+
+    /**
+     * Get the direction of another Tile from the viewpoint of this Tile
      */
     public float directionOf(Tile tile){
         float dx = tile.accX-accX;
         float dy = tile.accY-accY;
         float dir = (float)(( - Math.atan2(dx, dy ) / (2*Math.PI)) * 360 + 90);
-        return(dir);
+        return(normAngle(dir));
     }
 
     public void act(){
         if(getDungeon() != null){
             // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
             subSpecific();
+
+            //DIE!1!!
+            if(health < 1){
+                getDungeon().removeObject(this);
+            }
         }
 
-        //DIE!1!!
-        if(health < 1){
-            getDungeon().removeObject(this);
-        }
     }
 }

@@ -11,5 +11,6 @@ public class FPurple extends Fireball
     public FPurple(float direction){
         super(direction);
         imageLoc = "fireball-purple.png";
+        damage=90;
     }   
 }

@@ -12,6 +12,7 @@ public class Player extends Tile
         damage=5;
         space=false;
         speed=1;
+        angularSpeed=3;
         imageLoc = "player.png"; // choose image
         visibleAlways = true; //players are visible by default
         heightMap[1] = true; //the player is situated at height 1 and is solid
@@ -23,8 +24,8 @@ public class Player extends Tile
      */
     @Override
     public void subSpecific() {
-        movement();
-        attack();
-        turn();
+        PlayerMovement();
+        PlayerAttack();
+        PlayerTurn();
     }    
 }
