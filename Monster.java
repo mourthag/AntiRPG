@@ -57,9 +57,9 @@ public class Monster extends Tile
     public void subSpecific(){
         subSubSpecific();
         //
-        if(getObjectsInRange(100, Player.class).size() > 0){
+        if(getObjectsInRange(getDungeon().tileWidth*6, Player.class).size() > 0){
             active = true;
-            target = (Tile) getObjectsInRange(100, Player.class).get(0);
+            target = (Tile) getObjectsInRange(getDungeon().tileWidth*6, Player.class).get(0);
         } else {
             active = false;
         }

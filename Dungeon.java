@@ -17,10 +17,10 @@ public class Dungeon extends World
     public int difficulty = 10;
     public int Score = 0;
 
-    public static final int frameWidth = Integer.valueOf(JOptionPane.showInputDialog("Width","1131"));      //tmp no control for invalid values
-    public static final int frameHeight = Integer.valueOf(JOptionPane.showInputDialog("Height","725"));     //tmp no control for invalid values
-    public static final int tileCountX = 51; // frameWidth % tileCountX should be 0, and frameWidth/tileCountX=frameHeight/tileCountY
-    public static final int tileCountY = 34; // frameHight % tileCountY should be 0
+    public static final int frameWidth = 990; //Integer.valueOf(JOptionPane.showInputDialog("Width","1131"));      //tmp no control for invalid values
+    public static final int frameHeight = 594; //Integer.valueOf(JOptionPane.showInputDialog("Height","725"));     //tmp no control for invalid values
+    public static final int tileCountX = 30; // frameWidth % tileCountX should be 0, and frameWidth/tileCountX=frameHeight/tileCountY
+    public static final int tileCountY = 18; // frameHight % tileCountY should be 0
     public static final int tileWidth = frameWidth/tileCountX;
     public static final int tileHeight = frameHeight/tileCountY;
 
@@ -95,50 +95,50 @@ public class Dungeon extends World
                 //Zeichen verarbeiten
                 if(curChar == '+')
                 {
-                    addObject(new Wall(), i*tileWidth,j*tileHeight); 
+                    addObject(new Wall(), i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
                 }               
                 else if(curChar == '-')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }
                 else if(curChar == '#')
                 {
-                    addObject(new Door(),i*tileWidth,j*tileHeight); 
+                    addObject(new Door(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }
                 else if(curChar == 'x')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Monster1(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Monster1(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }
                 else if(curChar == 'c')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Monster2(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Monster2(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }
                 else if(curChar == 'p')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Player(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Player(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }
                 else if(curChar == 'd')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Deco1(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Deco1(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }	
                 else if(curChar == 'd')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Deco2(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Deco2(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }	
                 else if(curChar == 'd')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Deco3(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Deco3(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }	
                 else if(curChar == 'b')
                 {
-                    addObject(new Floor(),i*tileWidth,j*tileHeight);
-                    addObject(new Boss(),i*tileWidth,j*tileHeight); 
+                    addObject(new Floor(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5));
+                    addObject(new Boss(),i*tileWidth + (int)(tileWidth * 0.5),j*tileHeight + (int)(tileWidth * 0.5)); 
                 }	
                 i++;
             }
