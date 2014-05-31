@@ -35,14 +35,17 @@ public class Tile extends hackedActor{
     boolean[] heightMap; //height map, height two for now (needs to be consistent among tiles, but should stay easily changeable for a slightly different game
     boolean[][] colMap; // collision map
 
+    /**
+     * Default constructor
+     */
     public Tile(){
         //set up Tile's images
         imageLoc = "none.png";
         visibleAlways = false;
 
-        health=100; //just some default value
+        health=100000000; //just some default value. Large, because default Tiles should stay
 
-        damage=0; //just some default value
+        damage=1; //just some default value. Bigger than one: Fuck players/monsters who scrape along walls
 
         //set up Tile's height map
         height = 2; // Don't change in subclasses or the system will go bananas (I guarantee for nothing)
@@ -52,8 +55,6 @@ public class Tile extends hackedActor{
             heightMap[h]=false;
         }
 
-        //set up Tile's collision map
-
         //set up Tile's location and orientation
         accXYRInit=false;
         accR = 0;
@@ -61,7 +62,7 @@ public class Tile extends hackedActor{
 
     /**
      * Copy constructor
-     * Doesn't really work properly yet.
+     * Doesn't really work properly yet. (in most important cases it does)
      */
     public Tile(Tile another){
         this.imageLoc = another.imageLoc;
@@ -77,7 +78,6 @@ public class Tile extends hackedActor{
     @Override
     protected void addedToWorld(World world){
         setUpImage();
-
         setUpColMap();
 
         //initialize accurate location and orientation storage
@@ -88,7 +88,7 @@ public class Tile extends hackedActor{
         }
     }
 
-    /*
+    /**
      * Set up Tile's image
      * Assumes accR contains a correct value and rotates the image accordingly, should be a safe assumption
      */
@@ -104,7 +104,7 @@ public class Tile extends hackedActor{
         setImage(image);
     }
 
-    /*
+    /**
      * Set up Tile's image with the image loaded from loc
      */
     public void setUpImage(String loc){
@@ -112,8 +112,8 @@ public class Tile extends hackedActor{
         setUpImage();
     }
 
-    /*
-     * Sets up the Tile's collision map based on it's image
+    /**
+     * Sets up the Tile's collision map based on image
      */
     public void setUpColMap(GreenfootImage image){
         colMap = new boolean[image.getWidth()][image.getHeight()];
@@ -132,14 +132,14 @@ public class Tile extends hackedActor{
         }
     }
 
+    /**
+     * Sets up the collision map based on it's image
+     */
     public void setUpColMap(){
-        GreenfootImage rotatedImage = new GreenfootImage(image);
-        // !! don't leave like this
-        //rotatedImage.rotate(getRotation());
-        setUpColMap(rotatedImage);
+        setUpColMap(image);
     }
 
-    /*
+    /**
      * Initialize our internal location/rotation tracking
      */
     public void accXYRInit(float x, float y, float r){
@@ -149,14 +149,14 @@ public class Tile extends hackedActor{
         accXYRInit=true;
     }
 
-    /*
+    /**
      * Initialize our internal location/rotation tracking by taking Greenfoot's values
      */
     public void accXYRInit(){
         accXYRInit(getX(), getY(), getRotation());
     }
 
-    /*
+    /**
      * Set Greenfoot location/rotation values to our internal ones.
      * (not rotation right now, probably never, Greenfoot just messes up when we use it)
      */
@@ -166,20 +166,56 @@ public class Tile extends hackedActor{
         //setRotation(Math.round(accR));
     }
 
-    // kind of like smoothMover, but without the unnecessary features
+    /**
+     * Default values for move(float x, float y, boolean collisions, boolean asMuchAsPossible)
+     */
     public void move(float x, float y){
-        accX += x;
-        accY += y;
-        accXYRUpdate();
-        if(colliding()){ // just reverse the move before displaying it if it would lead to a collision. Might need to be changed to something more intelligent later on
-            move(-x,-y);
+        move(x, y, true, false);
+    }
+
+    /**
+     * Moves the Tile.
+     * This works around Greenfoot in several ways.
+     * collisions: whether to check for collisions. Assumed to be true when asMuchAsPossible is
+     * asMuchAsPossible: moves as much towards the desired position as (easily) possible without collisions. It's not very smart because that would be difficult/expensive, but it's a start
+     */
+    public void move(float x, float y, boolean collisions, boolean asMuchAsPossible){
+        if(!asMuchAsPossible){
+            accX += x;
+            accY += y;
+            accXYRUpdate();
+            if(collisions && colliding()){ //assumes the if stops once the first is false, because otherwise that would be stupid
+                move(-x,-y, false, false); //when moving back, don't check for collisions  or this could lead to endless loops
+            }
+        } else {
+            //VERY cheap and easy way to solve it, but don't need more right now
+            move(x, 0);
+            move(0, y);
         }
     }
 
-    public void move(float direction){
-        move((float)Math.cos((direction/360) * 2 * Math.PI)*speed, (float)Math.sin((direction/360) * 2 * Math.PI)*speed);
+    /**
+     * Move the Tile in the direction by this.speed,
+     * collisions and asMuchAsPossible like in move(float x, float y, boolean collisions, boolean asMuchAsPossible)
+     */
+    public void move(float direction, boolean collisions, boolean asMuchAsPossible){
+        move((float)Math.cos((direction/360) * 2 * Math.PI)*speed, (float)Math.sin((direction/360) * 2 * Math.PI)*speed, collisions, asMuchAsPossible);
     }
 
+    /**
+     * Default values for move(float direction, boolean collisions, boolean asMuchAsPossible)
+     */
+    public void move(float direction){
+        move(direction, true, false);
+    }
+    
+    /**
+     * Rotates the Tile by r.
+     * This works around Greenfoot in several ways, Greenfoot is never notified of the rotation.
+     * This is pretty exensive, because the collision map needs to be regenerated
+     * and we can't rotate the small displayed images (because that looks like crap)
+     * but need to rotate the large originals and scale the result
+     */
     public void rotate(float r){
         accR += r;
         setUpImage();
@@ -189,7 +225,7 @@ public class Tile extends hackedActor{
         }
     }
 
-    /*
+    /**
      * Returns true when this Tile's collision map intersects with oColMap which is at oX|oY
      * oColMap is assumed to have the same size as this Tile's colMap
      */
@@ -214,6 +250,12 @@ public class Tile extends hackedActor{
         return(false);
     }
 
+    /**
+     * Returns true when there are any collision with this Tile.
+     * It does three checks for collisions, the fastest first,
+     * and skips the rest of the tests if the previous ones were sufficient to
+     * determine there are no collisions
+     */
     public boolean colliding(){
         List<Tile> tilesVisible = getIntersectingObjects(Tile.class); //visually intersecting tiles
         for(Tile otherTile : tilesVisible)
@@ -279,7 +321,7 @@ public class Tile extends hackedActor{
 
         float factor=1;
         if(x != 0 && y != 0) factor=(float)0.7071; // factor = squareRoot(0.5)
-        move(x*speed*factor, y*speed*factor);
+        move(x*speed*factor, y*speed*factor, true, true);
     }
 
     /**
@@ -312,11 +354,13 @@ public class Tile extends hackedActor{
         if(Greenfoot.isKeyDown("n")) rotate(2);
     }
 
+    /**
+     * Get the direction of an other Tile from the viewpoint of this Tile
+     */
     public float directionOf(Tile tile){
         float dx = tile.accX-accX;
         float dy = tile.accY-accY;
         float dir = (float)(( - Math.atan2(dx, dy ) / (2*Math.PI)) * 360 + 90);
-        //if(accY < tile.accY) dir = -dir;
         return(dir);
     }
 

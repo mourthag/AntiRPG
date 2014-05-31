@@ -16,7 +16,7 @@ public abstract class Fireball extends Tile
         heightMap[1] = true;
         speed = 3;
         direction = dir;
-        damage=50;
+        damage=10;
     }
 
     /**
@@ -32,7 +32,7 @@ public abstract class Fireball extends Tile
     public void subSpecific(){
         age++;
         if(age > 30) disappear=true;
-        rotate(10);
+        rotate(10); //pretty expensive, rotate() needs some optimizing if we keep that
         move(direction);
         if(disappear){
             getDungeon().removeObject(this);
