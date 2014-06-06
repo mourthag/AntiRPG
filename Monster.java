@@ -6,17 +6,18 @@ import java.util.List;
  */
 public class Monster extends Tile
 {
-    int counter;
     boolean active;
     Tile target;
+    float range; //multiplied by tile size
 
     public Monster() 
     {
-        imageLoc = "baby2.png"; // choose image
+        imageLoc = "monster.png"; // choose image
         heightMap[1] = true; //monsters are situated at height 1 and are solid
         damage = 100;
         health = 1000;
         active = false;
+        range = 6;
     }
 
     /**
@@ -57,9 +58,9 @@ public class Monster extends Tile
     public void subSpecific(){
         subSubSpecific();
         //
-        if(getObjectsInRange(getDungeon().tileWidth*6, Player.class).size() > 0){
+        if(getObjectsInRange(Math.round(getDungeon().tileWidth*range), Player.class).size() > 0){
             active = true;
-            target = (Tile) getObjectsInRange(getDungeon().tileWidth*6, Player.class).get(0);
+            target = (Tile) getObjectsInRange(Math.round(getDungeon().tileWidth*range), Player.class).get(0);
         } else {
             active = false;
         }

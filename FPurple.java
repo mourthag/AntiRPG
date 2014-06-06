@@ -9,5 +9,6 @@ public class FPurple extends Fireball
         super(direction);
         imageLoc = "fireball-purple.png";
         damage=90;
+        maxAge=100;
     }   
 }

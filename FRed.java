@@ -8,6 +8,7 @@ public class FRed extends Fireball
     public FRed(float direction){
         super(direction);
         imageLoc = "fireball.png";
-        damage = 30;
+        damage = 40;
+        maxAge = 90;
     }    
 }

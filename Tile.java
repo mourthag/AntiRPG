@@ -30,6 +30,9 @@ public class Tile extends hackedActor{
 
     public int damage;
 
+    int dropCountdown; //when this isn't 0 Tile's can't drop anything, to prevent them from dropping stuff too often. Decremented every act().
+    int dropTime; // This is the amount added to dropCountdown when something is dropped
+
     boolean space;
 
     //Tile's geometry
@@ -369,12 +372,15 @@ public class Tile extends hackedActor{
     }
 
     /**
-     * Drop tile in front of this.
+     * Drop tile in front of this with a limited repetition rate.
      */
     public void drop(Tile tile){
         //in front of == accR - 90
-        getDungeon().addObject(tile, (int)(accX+(float)Math.cos(((accR-90)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5), (int)(accY+(float)Math.sin(((accR-90)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5));
-        if(tile.colliding()) getDungeon().removeObject(tile);
+        if(dropCountdown == 0){
+            getDungeon().addObject(tile, (int)(accX+(float)Math.cos(((accR-90)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5), (int)(accY+(float)Math.sin(((accR-90)/360) * 2 * Math.PI)*getDungeon().tileHeight*1.5));
+            if(tile.colliding()) getDungeon().removeObject(tile);
+            dropCountdown = dropTime;
+        }
     }
 
     /**
@@ -419,6 +425,7 @@ public class Tile extends hackedActor{
             // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
             subSpecific();
         }
+        if(dropCountdown > 0) dropCountdown--;
 
     }
 

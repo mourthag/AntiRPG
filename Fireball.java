@@ -11,12 +11,14 @@ public abstract class Fireball extends Tile
     float direction;
     boolean disappear;
     int age;
+    int maxAge;
 
     public Fireball(float dir){
         heightMap[1] = true;
         speed = 3;
         direction = dir;
         damage=10;
+        maxAge = 30;
     }
 
     /**
@@ -32,7 +34,7 @@ public abstract class Fireball extends Tile
      */
     public void subSpecific(){
         age++;
-        if(age > 30) disappear=true;
+        if(age > maxAge) disappear=true;
         rotate(10); //pretty expensive, rotate() needs some optimizing if we keep that
         move(direction);
         if(disappear){

@@ -6,12 +6,18 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Monster1 extends Monster
 {
     public Monster1(){
-        health=100;
-        damage=50;
+        imageLoc = "monster-brown.png"; // choose image
+        health=300;
+        damage=10;
+        dropTime = 30;
         angularSpeed = 2;
-        speed = (float)0.05;
+        speed = (float)0.1;
+        range = 8;
     }
 
+    /**
+     * Attacks the player
+     */
     public void attack(){
         drop(new FBlue(accR-90));
     }
@@ -20,9 +26,7 @@ public class Monster1 extends Monster
      * Handles all the actions of the monster, how often it performs them, ...
      */
     public void subSubSpecific(){
-        counter++;
-        if(counter>100) counter=0;
-        if(counter==10) shootPlayer();
+        shootPlayer();
         followPlayer();
     }
 }

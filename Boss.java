@@ -6,12 +6,18 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Boss extends Monster
 {
     public Boss(){
-        health=300;
-        damage=5;
-        speed=1;
+        imageLoc = "monster-red.png";
+        health=1000;
+        dropTime = 50;
+        damage=15;
+        speed=(float)0.5;
         angularSpeed = 5;
+        range = 9;
     }
 
+    /**
+     * Attacks the player
+     */
     public void attack(){
         drop(new FPurple(accR-90));
     }
@@ -20,9 +26,7 @@ public class Boss extends Monster
      * Handles all the actions of the monster, how often it performs them, ...
      */
     public void subSubSpecific(){
-        counter++;
-        if(counter>100) counter=0;
-        if(counter==10) shootPlayer();
+        shootPlayer();
         followPlayer();
     }
 }

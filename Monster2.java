@@ -6,18 +6,17 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Monster2 extends Monster
 {
     public Monster2(){
-        health=100;
+        health=300;
         damage=5;
-        speed=(float)0.5;
+        speed=(float)0.8;
         angularSpeed=6;
+        range = 10;
     }   
 
     /**
      * Handles all the actions of the monster, how often it performs them, ...
      */
     public void subSubSpecific(){
-        counter++;
-        if(counter>100) counter=0;
         followPlayer();
     }
 }
