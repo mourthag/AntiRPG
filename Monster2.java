@@ -7,7 +7,7 @@ public class Monster2 extends Monster
 {
     public Monster2(){
         health=300;
-        damage=5;
+        damage=1;
         speed=(float)0.8;
         angularSpeed=6;
         range = 10;

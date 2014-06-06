@@ -10,7 +10,7 @@ public class Player extends Tile
         health=100;
         damage=5;
         space=false;
-        dropTime = 60;
+        dropTime = 50;
         speed=1;
         angularSpeed=3;
         imageLoc = "player.png"; // choose image
