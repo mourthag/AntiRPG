@@ -3,8 +3,8 @@ import java.util.List;
 import java.util.Arrays;
 
 /**
- *A Class that contains the subclasses for the specific Rooms
- *a rectangle room is the standart shape
+ * A Class that contains the subclasses for the specific Rooms
+ * a rectangle room is the standart shape
  */
 public class Room extends metaTile
 {

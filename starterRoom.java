@@ -21,7 +21,7 @@ public class starterRoom extends Room
     } 
 
     /**
-     * Add a player and some (not so)random Deco
+     * Add a player and some (not that) random Deco
      */
     @Override
     public void specificContent()
@@ -37,7 +37,7 @@ public class starterRoom extends Room
     }
 
     /**
-     * set the minimum of following Rooms to 2 so it will not stop at the starterRoom
+     * Set the minimum of following Rooms to 2 so it will not stop at the starterRoom
      */
     @Override
     public void setDoorCount()

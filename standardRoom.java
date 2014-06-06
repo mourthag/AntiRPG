@@ -20,7 +20,7 @@ public class standardRoom extends Room
     }  
 
     /**
-     * Add some(none) random Deco and monsters
+     * Add some (none) random Deco and monsters
      */
     @Override
     public void specificContent()

@@ -4,7 +4,7 @@ import java.awt.Font;
 import java.lang.Math;
 
 /**
- * Write a description of class Screen here.
+ * Class for text displaying objects.
  */
 public class Screen extends hackedActor
 {

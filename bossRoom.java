@@ -32,6 +32,7 @@ public class bossRoom extends Room
         
         getDungeon().addObject(new Boss(), curX + 4 * tileWidth, curY + 4 * tileHeight);
     }
+    
     /**
      * No following Rooms
      */

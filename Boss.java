@@ -16,6 +16,9 @@ public class Boss extends Monster
         drop(new FPurple(accR-90));
     }
 
+    /**
+     * Handles all the actions of the monster, how often it performs them, ...
+     */
     public void subSubSpecific(){
         counter++;
         if(counter>100) counter=0;

@@ -27,6 +27,9 @@ public abstract class Fireball extends Tile
         disappear=true; //can't just delete it right now, would break stuff which expects it to stay there for another few lines
     }
 
+    /**
+     * Handle aging, movement and extinction
+     */
     public void subSpecific(){
         age++;
         if(age > 30) disappear=true;

@@ -1,10 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Deco3 here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * A kind of Deco
  */
 public class Deco3 extends Deco
 {

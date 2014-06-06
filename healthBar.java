@@ -2,7 +2,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
 
 /**
- * Small Healthbar to indicate the Player´s health
+ * Small Healthbar to indicate the Player's health
  */
 public class healthBar extends hackedActor
 {

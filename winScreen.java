@@ -1,10 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class wonScreen here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * Screen which is displayed when you have won.
  */
 public class winScreen extends Screen
 {

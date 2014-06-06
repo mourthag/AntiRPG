@@ -4,14 +4,11 @@ import java.util.ArrayList;
 
 /**
  * A metaTile refers to multiple Tiles. It can be used to perform operations on those Tiles and to store additional information on a group of Tiles.
- * Operations:
- *  * relative move
- *  * ...
  */
 public class metaTile extends hackedActor
 {
     List<Tile> tiles; //tiles belonging to the metaTile
-    //subclasses define the variable
+    //subclasses can define the variable
 
     /**
      * Initialize object
@@ -148,6 +145,9 @@ public class metaTile extends hackedActor
         }
     }
 
+    /**
+     * Return true if any of this metaTile's tiles are colliding with something at the moment, false otherwise.
+     */
     public boolean colliding(){
         for(Tile tile : tiles){
             if(tile.colliding()) return(true);
@@ -173,9 +173,12 @@ public class metaTile extends hackedActor
         move(x, y, true);
     }
 
+    /**
+     * For subclasses to overwrite, called by act()
+     */
     public void subSpecific()
     {
-        //for subclasses to overwrite
+
     }
 
     /**

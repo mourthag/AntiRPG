@@ -5,7 +5,7 @@ import java.lang.Math;
 import java.util.List;
 
 /**
- * Tiles are our kind of Actors, with some additional features.
+ * Tiles are our primary kind of Actors, with some additional features.
  */
 public class Tile extends hackedActor{
     //Tile's image
@@ -64,7 +64,7 @@ public class Tile extends hackedActor{
 
     /**
      * Copy constructor
-     * Doesn't really work properly yet. (in most important cases it does)
+     * Doesn't really work properly yet. (in the most important cases it does)
      */
     public Tile(Tile another){
         this.imageLoc = another.imageLoc;
@@ -74,7 +74,7 @@ public class Tile extends hackedActor{
         this.heightMap = another.heightMap;
     }
 
-    /*
+    /**
      * Run when placing the object in the world
      */
     @Override
@@ -394,6 +394,7 @@ public class Tile extends hackedActor{
 
     /**
      * Turn towards Tile tile
+     * (works surpringly well, so much that I won't improve it beyond that for now)
      */
     public void turnTowards(Tile tile){
         if(normAngle(accR + 90 - directionOf(tile)) > 0){
@@ -421,6 +422,9 @@ public class Tile extends hackedActor{
 
     }
 
+    /**
+     * Handles dying for different types of Tile.
+     */
     public void die()
     {
         if(this.getClass() == Player.class)

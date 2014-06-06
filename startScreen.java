@@ -1,7 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class startScreen here.
+ * Start screen.
  */
 public class startScreen extends Screen
 {
@@ -11,8 +11,8 @@ public class startScreen extends Screen
      */
     public void act() 
     {
-      while(!Greenfoot.isKeyDown("enter"));
-                getDungeon().removeObject(this);      //Suicide
+        while(!Greenfoot.isKeyDown("enter"));
+        getDungeon().removeObject(this);
     } 
 
     public startScreen()
