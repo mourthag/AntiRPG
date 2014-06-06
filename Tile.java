@@ -1,6 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
 import java.lang.*;
+import java.lang.Math;
 import java.util.List;
 
 /**
@@ -86,6 +87,13 @@ public class Tile extends hackedActor{
             accXYRInit();
         } else{
             accXYRUpdate();
+        }
+
+        if(this.getClass() == Player.class)
+        {
+            healthBar HB = new healthBar(health);
+            getDungeon().addObject(HB, Math.round(getDungeon().frameWidth / 2) , 0);
+            HB.makeImage(health);
         }
     }
 
@@ -308,6 +316,18 @@ public class Tile extends hackedActor{
      */
     void gotHit(Tile tile){
         health -= tile.damage;
+        if(this.getClass() == Player.class)
+        {
+            List<healthBar> allHB = getDungeon().getObjectsAt(Math.round(getDungeon().frameWidth / 2), 0, healthBar.class);
+            for(healthBar curHB:allHB)
+            {
+                curHB.makeImage(health);
+            }
+        }
+        if(health <= 0)
+        {
+            die();
+        }
     }
 
     /**
@@ -397,12 +417,25 @@ public class Tile extends hackedActor{
         if(getDungeon() != null){
             // call to a function which is used by subclasses to do stuff they want to do (without overwriting this act() function)
             subSpecific();
-
-            //DIE!1!!
-            if(health < 1){
-                getDungeon().removeObject(this);
-            }
         }
+
+    }
+
+    public void die()
+    {
+        if(this.getClass() == Player.class)
+        {
+            getDungeon().addObject(new lossScreen(getDungeon().Score), Math.round(getDungeon().frameWidth / 2), Math.round(getDungeon().frameHeight / 2));
+        }
+        else if(this.getClass() == Boss.class)
+        {
+            getDungeon().addObject(new winScreen(getDungeon().Score), Math.round(getDungeon().frameWidth / 2), Math.round(getDungeon().frameHeight / 2));
+        } 
+        else if(this.getClass() == Monster1.class||this.getClass() == Monster2.class)
+        {
+            getDungeon().Score++;
+        }
+        getDungeon().removeObject(this);
 
     }
 }

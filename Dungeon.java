@@ -44,7 +44,7 @@ public class Dungeon extends World
         background.fill();
 
         //Screen, then player on top
-        setPaintOrder(Screen.class, Player.class, Monster.class, Tile.class);
+        setPaintOrder(Screen.class, healthBar.class , Player.class, Monster.class, Tile.class);
         //tmp playground
         //addObject(new Wall(), 45,45);
         //addObject(new Tile(), 70,45);

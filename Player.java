@@ -6,7 +6,6 @@ import java.util.List;
  */
 public class Player extends Tile
 {
-
     public Player(){
         health=100;
         damage=5;

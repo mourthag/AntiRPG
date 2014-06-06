@@ -1,6 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.awt.Color;
 import java.awt.Font;
+import java.lang.Math;
 
 /**
  * Write a description of class Screen here.
@@ -31,11 +32,9 @@ public class Screen extends hackedActor
     {
         int WIDTH = getDungeon().frameWidth;
         int HEIGHT = getDungeon().frameHeight;
-        int i = 1;
+        int i = 0;
         GreenfootImage image = new GreenfootImage(WIDTH, HEIGHT);
 
-        //TODO:Center the text
-        
         image.setColor(new Color(255,255,255, 128));
         image.fillRect(0, 0, WIDTH, HEIGHT);
         image.setColor(new Color(0, 0, 0, 128));
@@ -47,7 +46,7 @@ public class Screen extends hackedActor
 
         for(String curText: Text)
         {
-            image.drawString(curText, 60, i * 100);
+            image.drawString(curText, WIDTH / 2 - Math.round(curText.length() / 2) * 20, 100 +i * HEIGHT/Text.length);
             i++;
         }
         setImage(image);
