@@ -10,7 +10,7 @@ The mage dies once the green bar at the top of the screen which represents it's 
 
 ## Build/Install/Launch
 
-You need Greenfoot. To load the project into Greenfoot you might need to create a blank "project.greenfoot" file in the game folder so Greenfoot recognizes the project (we removed that file from Git because it's machine generated and annoying to merge, Greenfoot complains but works fine without it).
+You need Greenfoot. Launch Greenfoot, it calls it's projects "Scenarios", so you need to open the AntiRPG scenario. It will complain while opening the scenario and will claim that there might be problems, but there won't be any.
 When you've loaded the game into Greenfoot, you click "Compile", then "Run" and then follow the on-screen instructions. When you die or win you click "Reset" for a new game.
 
 ## To do:
