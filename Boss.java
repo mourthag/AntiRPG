@@ -7,12 +7,12 @@ public class Boss extends Monster
 {
     public Boss(){
         imageLoc = "monster-red.png";
-        health=1000;
-        dropTime = 50;
+        health=281; //four red fireballs and one 
+        dropTime = 40;
         damage=15;
-        speed=(float)0.5;
-        angularSpeed = 5;
-        range = 5;
+        speed=(float)0.005;
+        angularSpeed = 3;
+        range = 10;
     }
 
     /**

@@ -7,11 +7,11 @@ public class Monster1 extends Monster
 {
     public Monster1(){
         imageLoc = "monster-brown.png"; // choose image
-        health=300;
+        health=100;
         damage=10;
-        dropTime = 75;
+        dropTime = 150;
         angularSpeed = 2;
-        speed = (float)0.1;
+        speed = (float)0.05;
         range = 8;
     }
 

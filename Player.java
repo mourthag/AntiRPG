@@ -11,7 +11,7 @@ public class Player extends Tile
         damage=5;
         space=false;
         dropTime = 50;
-        speed=1;
+        speed=2;
         angularSpeed=3;
         imageLoc = "player.png"; // choose image
         visibleAlways = true; //players are visible by default
