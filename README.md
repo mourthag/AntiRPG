@@ -19,7 +19,7 @@ When you've loaded the game into Greenfoot, you click "Compile", then "Run" and 
 * Decorations (well, they should get images, otherwise they don't really contribute to the game)
 * Migrate to a real engine as the deadline has passed anyway (godot? seems pretty decent and it's cross platform. Or maybe something of our own, would be a nice challenge but not really results oriented. Or maybe we should just leave it.)
 
-## License for every Java source file in this git and this readme:
+## For every Java source file in this git and this readme:
 
 Copyright 2014 Julian Spittel and Lukas Bürgi.
 
