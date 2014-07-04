@@ -10,14 +10,16 @@ The mage dies once the green bar at the top of the screen which represents it's 
 
 ## Build/Install/Launch
 
-You need Greenfoot. To load the project into Greenfoot you might need to create a blank "project.greenfoot" file in the game folder so Greenfoot recognizes the project (we removed that file from Git because it's machine generated and annoying to merge, Greenfoot complains but works fine without it).
+If you just want to try out the game, go to "releases" and download the latest "AntiRPG.jar" file. You need to have Java installed, then you can launch the game by double clicking the .jar file.
+
+If you also want to edit it's probably easiest to use Greenfoot. To load the project into Greenfoot you might need to create a blank "project.greenfoot" file in the game folder so Greenfoot recognizes the project (we removed that file from Git because it's machine generated and annoying to merge, Greenfoot complains but works fine without it).
 When you've loaded the game into Greenfoot, you click "Compile", then "Run" and then follow the on-screen instructions. When you die or win you click "Reset" for a new game.
 
 ## To do:
 * Decorations (well, they should get images, otherwise they don't really contribute to the game)
 * Migrate to a real engine as the deadline has passed anyway (godot? seems pretty decent and it's cross platform. Or maybe something of our own, would be a nice challenge but not really results oriented. Or maybe we should just leave it.)
 
-# License for every Java source file in this git and this readme:
+## License for every Java source file in this git and this readme:
 
 Copyright 2014 Julian Spittel and Lukas Bürgi.
 
