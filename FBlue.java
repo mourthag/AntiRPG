@@ -7,7 +7,7 @@ public class FBlue extends Fireball
 {
     public FBlue(float direction){
         super(direction);
-        imageLoc = "fireball.png";
+        imageLoc = "fireball-blue.png";
         damage = 70;
         maxAge = 15;
     }    

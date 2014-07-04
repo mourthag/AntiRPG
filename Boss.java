@@ -12,7 +12,7 @@ public class Boss extends Monster
         damage=15;
         speed=(float)0.5;
         angularSpeed = 5;
-        range = 9;
+        range = 5;
     }
 
     /**
